@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Dimensions, FlatList, Image, Pressable, Text, View } from 'react-native'
 import { styles } from './styles'
 import { imageData } from './data'
-import Modal from '../../component/modal'
+import Modal from '../../component/Modal/modal'
 
 const { width, height } = Dimensions.get("window")
 
@@ -10,7 +10,7 @@ const HomeScreen = () => {
 
   const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
   const [visible, setVisible] = useState(false);
-
+  const [item, setItem] = useState("");
 
   return (
     <View style={styles.container}>
@@ -37,7 +37,11 @@ const HomeScreen = () => {
             renderItem={({ item, index }) => (
               <Pressable
                 style={[{ width: width * 0.425, height: width * 0.425 }, styles.box]}
-                onPress={() => setVisible(true)}
+                key={index}
+                onPress={() => {
+                  setVisible(true)
+                  setItem(item)
+                }}
               >
                 <Image style={styles.imageBox} source={{ uri: item }} />
               </Pressable>
@@ -49,7 +53,7 @@ const HomeScreen = () => {
           />
 
           :
-          <Modal isVisible={visible} />
+          <Modal item={item} isVisible={visible} setVisible={setVisible} />
       }
 
     </View>

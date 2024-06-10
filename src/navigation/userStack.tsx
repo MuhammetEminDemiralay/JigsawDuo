@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import React from 'react'
-import { CategoryScreen, DailyScreen, HomeScreen, MyPuzzleScreen, SpecialScreen } from '../screen';
-import { Entypo, FontAwesome5, MaterialCommunityIcons, FontAwesome, FontAwesome6 } from '@expo/vector-icons';
+import { AdminScreen, CategoryScreen, DailyScreen, HomeScreen, MyPuzzleScreen, SpecialScreen } from '../screen';
+import { MaterialIcons, Entypo, FontAwesome5, MaterialCommunityIcons, FontAwesome, FontAwesome6 } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
 
 
@@ -62,6 +62,15 @@ const UserStack = () => {
                 options={{
                     tabBarIcon: ({ }) => (
                         <FontAwesome5 name="user-alt" size={30} color="black" />)
+                }}
+            />
+            <Stack.Screen
+                name='admin'
+                component={AdminScreen}
+                options={{
+                    tabBarIcon: ({ }) => (
+                        <MaterialIcons name="admin-panel-settings" size={35} color="black" />
+                    )
                 }}
             />
         </Stack.Navigator>
