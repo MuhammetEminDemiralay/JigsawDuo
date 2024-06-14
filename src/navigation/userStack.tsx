@@ -10,6 +10,7 @@ const { width, height } = Dimensions.get("window")
 const UserStack = () => {
 
     const Stack = createBottomTabNavigator();
+    const isAdmin = true;
 
     return (
         <Stack.Navigator
@@ -64,15 +65,18 @@ const UserStack = () => {
                         <FontAwesome5 name="user-alt" size={30} color="black" />)
                 }}
             />
-            <Stack.Screen
-                name='admin'
-                component={AdminScreen}
-                options={{
-                    tabBarIcon: ({ }) => (
-                        <MaterialIcons name="admin-panel-settings" size={35} color="black" />
-                    )
-                }}
-            />
+            {
+                isAdmin &&
+                <Stack.Screen
+                    name='admin'
+                    component={AdminScreen}
+                    options={{
+                        tabBarIcon: ({ }) => (
+                            <MaterialIcons name="admin-panel-settings" size={36} color="black" />
+                        )
+                    }}
+                />
+            }
         </Stack.Navigator>
     )
 }

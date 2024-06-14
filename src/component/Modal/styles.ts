@@ -45,7 +45,7 @@ export const styles = StyleSheet.create({
 
     personBox: {
         width: '100%',
-        height: '20%',
+        height: '25%',
         borderWidth: 0.5,
         flexDirection: 'row',
         alignItems: 'center',
@@ -62,7 +62,7 @@ export const styles = StyleSheet.create({
     },
     difficultBox: {
         width: '100%',
-        height: '20%',
+        height: '25%',
         borderWidth: 0.5,
         alignItems: 'center',
         justifyContent: 'center',
@@ -87,7 +87,7 @@ export const styles = StyleSheet.create({
 
     pieceBox: {
         width: '100%',
-        height: '20%',
+        height: '25%',
         borderWidth: 0.5,
         alignItems: 'center',
         justifyContent: 'center'
@@ -106,14 +106,10 @@ export const styles = StyleSheet.create({
     },
 
 
-    turnPieceBox: {
-        width: '100%',
-        height: '20%',
-        borderWidth: 0.5
-    },
+   
     startBox: {
         width: '100%',
-        height: '20%',
+        height: '25%',
         borderWidth: 0.5,
         alignItems: 'center',
         justifyContent: 'center'

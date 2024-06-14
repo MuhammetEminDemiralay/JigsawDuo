@@ -121,10 +121,6 @@ const Modal = ({ isVisible, setVisible, item }: any) => {
                         />
                     </View>
 
-                    <View style={styles.turnPieceBox}>
-
-                    </View>
-
                     <View style={styles.startBox}>
                         <Pressable style={styles.startBtnBox}>
                             <Text style={styles.startBtnText}>Start</Text>
