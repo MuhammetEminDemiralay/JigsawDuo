@@ -19,7 +19,9 @@ const GameScreen = () => {
                     data={data}
                     renderItem={({ item, index }) => (
                         <View style={styles.pieceColumnWrapper}>
-                            < Image style={styles.image} key={index} source={require(`./image/1.png`)} />
+                   
+                            {/* < Image style={styles.image} key={index} source={require(`./image/1.png`)} />
+                             */}
                         </View>
                     )}
                     horizontal
@@ -39,7 +41,7 @@ const GameScreen = () => {
                     data={data}
                     renderItem={({ item, index }) => (
                         <View style={styles.pieceColumnWrapper}>
-                            < Image style={styles.image} key={index} source={require(`./image/1.png`)} />
+                            {/* < Image style={styles.image} key={index} source={require(`./image/1.png`)} /> */}
                         </View>
                     )}
                     horizontal

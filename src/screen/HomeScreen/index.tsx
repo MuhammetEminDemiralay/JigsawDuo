@@ -4,7 +4,6 @@ import { styles } from './styles'
 import { imageData } from './data'
 import Modal from '../../component/Modal/modal'
 import { useDispatch } from 'react-redux'
-import { getCategoryImage } from '../../redux/fileSlice'
 
 const { width, height } = Dimensions.get("window")
 
@@ -14,7 +13,7 @@ const HomeScreen = () => {
   const [visible, setVisible] = useState(false);
   const [item, setItem] = useState("");
 
-  const dispatch : any = useDispatch()
+  const dispatch: any = useDispatch()
 
   return (
     <View style={styles.container}>
@@ -27,7 +26,6 @@ const HomeScreen = () => {
                 data={data}
                 renderItem={() => (
                   <View style={{ width: width * 0.9, height: width * 0.6, borderWidth: 1, columnGap: 10, borderRadius: 10 }}>
-                    <Button title='çek' onPress={() => dispatch(getCategoryImage())}/>
                   </View>
                 )}
                 horizontal={true}

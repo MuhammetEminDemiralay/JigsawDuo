@@ -6,5 +6,4 @@ import MyPuzzleScreen from "./MyPuzzleScreen";
 import SpecialScreen from "./SpecialScreen";
 import AdminScreen from "./AdminScreen";
 
-
 export { AdminScreen, HomeScreen, CategoryScreen, DailyScreen, MyPuzzleScreen, SpecialScreen, LoginScreen }

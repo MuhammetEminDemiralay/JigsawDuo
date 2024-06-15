@@ -1,58 +1,24 @@
-import React, { useState } from 'react'
-import { Button, Image, Platform, Text, View } from 'react-native'
-import { styles } from './styles'
-import DocumentPicker from 'react-native-document-picker'
-import RNFS from 'react-native-fs';
-import { useDispatch } from 'react-redux';
-import { storage } from '../../../firebaseConfig';
-import { ref, uploadString, getBlob, uploadBytesResumable, getDownloadURL, uploadBytes } from 'firebase/storage';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import React from 'react'
+import MainScreen from './MainScreen'
+import OptionScreen from './OptionScreen'
+import ImageScreen from './ImageScreen'
 
 const AdminScreen = () => {
 
+    const Stack = createNativeStackNavigator()
 
-  const [files, setFiles] = useState<any>('');
-  const dispatch: any = useDispatch();
-
-
-
-  const selectDirectory = async () => {
-    try {
-
-      const { assets, didCancel } = await launchImageLibrary({ mediaType: 'photo', selectionLimit: 100 })
-
-
-
-      if (assets) {
-        for (let as of assets) {
-          let docRef = ref(storage, `file/${as.fileName}`)
-          const response = await fetch(`${as.uri}`)
-          const blob = await response.blob()
-
-          await uploadBytesResumable(docRef, blob)
-          console.log("a");
-
-        }
-
-      }
-
-
-    } catch (error) {
-      console.log("s");
-
-      console.log(error);
-    }
-  }
-
-
-
-  return (
-    <View style={styles.container}>
-      <Button title='klasör seç' onPress={() => selectDirectory()} />
-
-
-    </View>
-  )
+    return (
+        <Stack.Navigator
+            screenOptions={{
+                headerShown: false
+            }}
+        >
+            <Stack.Screen name='main' component={MainScreen} />
+            <Stack.Screen name='option' component={OptionScreen} />
+            <Stack.Screen name='image' component={ImageScreen} />
+        </Stack.Navigator>
+    )
 }
 
 export default AdminScreen
