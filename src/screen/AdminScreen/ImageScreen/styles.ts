@@ -6,7 +6,7 @@ export const styles = StyleSheet.create({
     mainContainer: {
         width: '100%',
         alignItems: 'center',
-        backgroundColor: '#ef233c',
+        backgroundColor: '#d3d3d3',
 
     },
     container: {
@@ -30,16 +30,18 @@ export const styles = StyleSheet.create({
     },
     image: {
         width: '100%',
-        height: '100%'
+        height: '100%',
+        resizeMode: 'contain'
     },
     header: {
         width: width * 0.9,
-        height: 100,
+        height: 120,
         marginTop: 50,
         marginBottom: 15,
-        backgroundColor: '#000814',
-        borderRadius: 10,
-        flexDirection: 'row'
+        backgroundColor: '#333533',
+        flexDirection: 'row',
+        borderWidth: 2,
+        borderColor: '#fff'
     },
     categoryName: {
         width: width * 0.35,
@@ -54,18 +56,11 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         flexDirection: 'row'
     },
-    confirmBox: {
+    confirmBtn: {
         width: width * 0.25,
         height: '100%',
         alignItems: 'center',
         justifyContent: 'center',
-    },
-    confirmBtn: {
-        width: width * 0.15,
-        height: width * 0.15,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 50
     },
     confirmIcon: {
         width: 50,
@@ -75,16 +70,5 @@ export const styles = StyleSheet.create({
     optionText: {
         fontSize: 20,
         fontWeight: '600'
-    },
-    selectDoc: {
-        width: width * 0.9,
-        height: 75,
-        borderWidth: 2,
-        borderColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderBottomLeftRadius: 50,
-        borderBottomRightRadius: 50,
-        backgroundColor: '#000814'
     }
 })

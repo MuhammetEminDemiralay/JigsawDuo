@@ -1,17 +1,38 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { storage } from "../../firebaseConfig";
-import { ref, uploadBytesResumable } from "firebase/storage";
+import { getDownloadURL, list, ref, uploadBytesResumable } from "firebase/storage";
+import uuid from 'react-native-uuid'
 
 
-
-export const addFile = createAsyncThunk("add/file", async (assets: any) => {
+export const addFile = createAsyncThunk("add/file", async (assets: null, { getState }) => {
   try {
 
-    for (let asset of assets) {
-      let docRef = ref(storage, `file/${asset.fileName}`)
-      const response = await fetch(`${asset.uri}`)
-      const blob = await response.blob()
-      await uploadBytesResumable(docRef, blob)
+    const state: any = getState()
+
+    const main = state.file.main;
+    const one = state.file.one;
+    const two = state.file.two;
+    const three = state.file.three;
+    const four = state.file.four;
+    const five = state.file.five;
+    const six = state.file.six;
+    const category = state.file.category;
+
+    const datas = [{ "main": main }, { "36": one }, { "64": two }, { "100": three }, { "144": four }, { "225": five }, { "400": six }]
+
+    const id = uuid.v4();
+
+    for (let data of datas) {
+      let key = Object.keys(data)[0]
+      let values = (data as { [key: string]: any })[key];
+
+      for (let data of values) {
+
+        let docRef = ref(storage, `file/${category}/${id}/${key}/${data.fileName}`)
+        const response = await fetch(`${data.uri}`)
+        const blob = await response.blob()
+        await uploadBytesResumable(docRef, blob)
+      }
     }
 
   } catch (error) {
@@ -19,6 +40,41 @@ export const addFile = createAsyncThunk("add/file", async (assets: any) => {
   }
 
 });
+
+
+export const getPuzzlesByCategory = createAsyncThunk('get/puzzlesByCategory', async (category: any, { getState }) => {
+  try {
+
+
+    const categoryRef = ref(storage, `file/${category}`)
+
+    const puzzle = await list(categoryRef)
+
+    let datas: any[] = []
+    for (let data of puzzle.prefixes) {
+      const puzzleRef = ref(storage, `${data.fullPath}/main`)
+      const puzzleData = await list(puzzleRef)
+
+      for (let data of puzzleData.items) {
+        const downloadRef = ref(storage, `${data.fullPath}`)
+        const downloadData = await getDownloadURL(downloadRef)
+        datas.push(downloadData)
+      }
+    }
+
+    return datas;
+
+  } catch (error) {
+
+  }
+
+})
+
+
+
+
+
+
 
 type Model = {
   main: any;
@@ -35,6 +91,9 @@ type Model = {
   fiveSize: number;
   six: any[];
   sixSize: number;
+  category: string,
+
+  downloadData?: any[]
 }
 
 const initialState: Model = {
@@ -51,7 +110,9 @@ const initialState: Model = {
   five: [],
   fiveSize: 0,
   six: [],
-  sixSize: 0
+  sixSize: 0,
+  category: '',
+  downloadData: []
 }
 
 export const fileSlice = createSlice({
@@ -89,9 +150,23 @@ export const fileSlice = createSlice({
     six400: (state, action) => {
       state.six = action.payload;
       state.sixSize = action.payload.length;
+    },
+    puzzleCategory: (state, action) => {
+      state.category = action.payload;
     }
   },
   extraReducers: (builder) => {
+
+    builder.
+      addCase(getPuzzlesByCategory.pending, (state, action) => {
+
+      }).
+      addCase(getPuzzlesByCategory.fulfilled, (state, action) => {
+        state.downloadData = action.payload
+      }).
+      addCase(getPuzzlesByCategory.rejected, (state, action) => {
+
+      })
 
   }
 
@@ -99,4 +174,4 @@ export const fileSlice = createSlice({
 
 
 export default fileSlice.reducer
-export const { main0, one36, two64, three100, four144, five225, six400 } = fileSlice.actions
+export const { main0, one36, two64, three100, four144, five225, six400, puzzleCategory } = fileSlice.actions
