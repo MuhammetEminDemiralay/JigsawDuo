@@ -44,30 +44,53 @@ export const addFile = createAsyncThunk("add/file", async (assets: null, { getSt
 
 export const getPuzzlesByCategory = createAsyncThunk('get/puzzlesByCategory', async (category: any, { getState }) => {
   try {
-
-
     const categoryRef = ref(storage, `file/${category}`)
-
     const puzzle = await list(categoryRef)
 
     let datas: any[] = []
     for (let data of puzzle.prefixes) {
+      let puzzleId = data.name;
+
       const puzzleRef = ref(storage, `${data.fullPath}/main`)
       const puzzleData = await list(puzzleRef)
 
       for (let data of puzzleData.items) {
         const downloadRef = ref(storage, `${data.fullPath}`)
         const downloadData = await getDownloadURL(downloadRef)
-        datas.push(downloadData)
+        datas.push({ id: puzzleId, downloadData: downloadData })
       }
     }
-
     return datas;
+  } catch (error) {
+    throw error
+  }
+})
+
+export const getPuzzleByPuzzleId = createAsyncThunk('get/puzzleByPuzzleId', async (info: any) => {
+  try {
+
+
+    const category = info.detailInfo.category
+    const pieceId = info.detailInfo.puzzle.id
+    const pieceCount = info.item;
+
+    const docRef = ref(storage, `file/${category}/${pieceId}/${pieceCount}`)
+    const datas = await list(docRef)
+
+    let finalyData: any[] = [];
+    for (let data of datas.items) {
+      const docRef = ref(storage, `${data.fullPath}`)
+
+      const downloadUri = await getDownloadURL(docRef)
+      finalyData.push({ uri: downloadUri, puzzlePath: docRef.fullPath })
+    }
+
+
+    return finalyData
 
   } catch (error) {
 
   }
-
 })
 
 
@@ -93,7 +116,8 @@ type Model = {
   sixSize: number;
   category: string,
 
-  downloadData?: any[]
+  downloadData?: any[],
+  puzzlePiece?: any[]
 }
 
 const initialState: Model = {
@@ -112,7 +136,8 @@ const initialState: Model = {
   six: [],
   sixSize: 0,
   category: '',
-  downloadData: []
+  downloadData: [],
+  puzzlePiece: []
 }
 
 export const fileSlice = createSlice({
@@ -165,6 +190,16 @@ export const fileSlice = createSlice({
         state.downloadData = action.payload
       }).
       addCase(getPuzzlesByCategory.rejected, (state, action) => {
+
+      }).
+
+      addCase(getPuzzleByPuzzleId.pending, (state, action) => {
+
+      }).
+      addCase(getPuzzleByPuzzleId.fulfilled, (state, action) => {
+        state.puzzlePiece = action.payload;
+      }).
+      addCase(getPuzzleByPuzzleId.rejected, (state, action) => {
 
       })
 

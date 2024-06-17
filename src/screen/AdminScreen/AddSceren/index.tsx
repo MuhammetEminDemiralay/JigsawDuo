@@ -28,7 +28,12 @@ const AddScreen = () => {
 
 
   const addPuzzle = async () => {
-    if (mainSize == 1 && oneSize && 36 && twoSize == 64 && threeSize == 100 && fourSize == 144 && fiveSize == 225 && sixSize == 400) {
+    if (
+      true
+      // mainSize == 1 && oneSize 
+      // && 36 && twoSize == 64 && threeSize == 100 && fourSize == 144
+      //  && fiveSize == 225 && sixSize == 400
+    ) {
       const response = await dispatch(addFile(null))
       Alert.alert("Puzzle oluşturuluyor")
     } else {

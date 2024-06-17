@@ -11,12 +11,14 @@ export const styles = StyleSheet.create({
     },
     header: {
         width: width * 0.9,
+        height : 120,
         backgroundColor: '#333533',
         flexDirection: 'row',
         borderWidth: 2,
         borderColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginVertical : 25
     },
     text: {
         fontSize: 25,
@@ -38,9 +40,18 @@ export const styles = StyleSheet.create({
         height: '100%',
         borderWidth: 1,
         borderColor: '#fff',
-        flexDirection : 'row',
-        alignItems : 'center',
-        justifyContent :'center',
-        columnGap : 15
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        columnGap: 15
+    },
+    imageBox: {
+        width: width * 0.425,
+        height: width * 0.425,
+    },
+    image: {
+        width: '100%',
+        height: '100%',
+        resizeMode: 'cover'
     }
 })
