@@ -38,9 +38,23 @@ export const styles = StyleSheet.create({
         height: '100%',
         borderWidth: 1,
         borderColor: '#fff',
-        flexDirection : 'row',
-        alignItems : 'center',
-        justifyContent :'center',
-        columnGap : 15
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        columnGap: 15
+    },
+    puzzleType: {
+        width: width * 0.9,
+        flexDirection: 'row',
+        borderWidth: 2,
+        borderColor: '#fff',
+    },
+    puzzleTypeBtn: {
+        width: width * 0.3,
+        height: '100%',
+        borderWidth: 1,
+        borderColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 })

@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { storage } from "../../firebaseConfig";
-import { getDownloadURL, list, ref, uploadBytesResumable } from "firebase/storage";
+import { getDownloadURL, getMetadata, list, listAll, ref, uploadBytesResumable } from "firebase/storage";
 import uuid from 'react-native-uuid'
 
 
-export const addFile = createAsyncThunk("add/file", async (assets: null, { getState }) => {
+export const addFile = createAsyncThunk("add/file", async (puzzleType: string, { getState }) => {
   try {
 
     const state: any = getState()
@@ -18,6 +18,8 @@ export const addFile = createAsyncThunk("add/file", async (assets: null, { getSt
     const six = state.file.six;
     const category = state.file.category;
 
+
+
     const datas = [{ "main": main }, { "36": one }, { "64": two }, { "100": three }, { "144": four }, { "225": five }, { "400": six }]
 
     const id = uuid.v4();
@@ -28,7 +30,7 @@ export const addFile = createAsyncThunk("add/file", async (assets: null, { getSt
 
       for (let data of values) {
 
-        let docRef = ref(storage, `file/${category}/${id}/${key}/${data.fileName}`)
+        let docRef = ref(storage, `${puzzleType}/${category}/${id}/${key}/${data.fileName}`)
         const response = await fetch(`${data.uri}`)
         const blob = await response.blob()
         await uploadBytesResumable(docRef, blob)
@@ -38,29 +40,65 @@ export const addFile = createAsyncThunk("add/file", async (assets: null, { getSt
   } catch (error) {
     throw error
   }
-
 });
 
 
-export const getPuzzlesByCategory = createAsyncThunk('get/puzzlesByCategory', async (category: any, { getState }) => {
+export const getPuzzlesByCategory = createAsyncThunk('get/puzzlesByCategory', async (params: any, { getState, dispatch }) => {
   try {
-    const categoryRef = ref(storage, `file/${category}`)
-    const puzzle = await list(categoryRef)
+
+    let puzzleType: any[];
+
+    if (params.puzzleType != null) {
+      puzzleType = [params.puzzleType]
+    } else {
+      puzzleType = ['file', 'genel', 'özel', 'günlük']      
+    }
+
+    
+    
 
     let datas: any[] = []
-    for (let data of puzzle.prefixes) {
-      let puzzleId = data.name;
 
-      const puzzleRef = ref(storage, `${data.fullPath}/main`)
-      const puzzleData = await list(puzzleRef)
 
-      for (let data of puzzleData.items) {
-        const downloadRef = ref(storage, `${data.fullPath}`)
-        const downloadData = await getDownloadURL(downloadRef)
-        datas.push({ id: puzzleId, downloadData: downloadData })
+    for (let type of puzzleType) { 
+      
+
+      console.log("TYPE ",type);
+      
+      
+      const categoryRef = ref(storage, `${type}/${params.category}`)
+      const puzzle = await list(categoryRef)
+
+      for (let data of puzzle.prefixes) {
+        let puzzleId = data.name;
+
+        const puzzleRef = ref(storage, `${data.fullPath}/main`)
+        const puzzleData = await list(puzzleRef)
+
+        for (let data of puzzleData.items) {
+          const downloadRef = ref(storage, `${data.fullPath}`)
+          const metaData = await getMetadata(downloadRef);
+          const docCreatedTime = metaData.timeCreated;
+          const downloadData = await getDownloadURL(downloadRef)
+          datas.push({ id: puzzleId, downloadData: downloadData, time: docCreatedTime })
+        }
       }
     }
-    return datas;
+
+    const sortedData = datas.sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
+
+    sortedData.reverse()
+
+    const state: any = getState();
+
+    const isCategory = state.file.cacheDownloadData.find((item: any) => Object.keys(item) == params.category)
+
+    if (isCategory == undefined) {
+      dispatch(setDownloadData({ [params.category]: sortedData }))
+    }
+
+    return sortedData
+
   } catch (error) {
     throw error
   }
@@ -68,7 +106,6 @@ export const getPuzzlesByCategory = createAsyncThunk('get/puzzlesByCategory', as
 
 export const getPuzzleByPuzzleId = createAsyncThunk('get/puzzleByPuzzleId', async (info: any) => {
   try {
-
 
     const category = info.detailInfo.category
     const pieceId = info.detailInfo.puzzle.id
@@ -84,16 +121,57 @@ export const getPuzzleByPuzzleId = createAsyncThunk('get/puzzleByPuzzleId', asyn
       const downloadUri = await getDownloadURL(docRef)
       finalyData.push({ uri: downloadUri, puzzlePath: docRef.fullPath })
     }
-
-
     return finalyData
+  } catch (error) {
+    throw error
+  }
+})
+
+
+export const getAllPuzzles = createAsyncThunk('getAll/puzzles', async () => {
+  try {
+
+    let finalyData: any[] = []
+    const puzzleType: any = ['file', 'genel', 'özel', 'günlük']
+
+    for (let type of puzzleType) {
+      const docRef = ref(storage, `${type}`);
+      const datas = await list(docRef);
+
+      for (let data of datas.prefixes) {
+        const docRef = ref(storage, `${data.fullPath}`)
+        const datas = await list(docRef);
+
+        for (let data of datas.prefixes) {
+          const puzzleRef = ref(storage, `${data.fullPath}/main`)
+          const puzzleData = await list(puzzleRef)
+
+          let puzzleId = data.name;
+
+          for (let data of puzzleData.items) {
+            const downloadRef = ref(storage, `${data.fullPath}`)
+            const metaData = await getMetadata(downloadRef);
+            const docCreatedTime = metaData.timeCreated;
+            const downloadData = await getDownloadURL(downloadRef)
+
+            finalyData.push({ id: puzzleId, downloadData: downloadData, time: docCreatedTime })
+          }
+        }
+      }
+    }
+
+    const sortedData = finalyData.sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
+
+    sortedData.reverse()
+
+
+
+    return sortedData
 
   } catch (error) {
 
   }
 })
-
-
 
 
 
@@ -117,7 +195,9 @@ type Model = {
   category: string,
 
   downloadData?: any[],
-  puzzlePiece?: any[]
+  puzzlePiece?: any[],
+  allPuzzlesImage?: any[],
+  cacheDownloadData: any[]
 }
 
 const initialState: Model = {
@@ -137,7 +217,9 @@ const initialState: Model = {
   sixSize: 0,
   category: '',
   downloadData: [],
-  puzzlePiece: []
+  puzzlePiece: [],
+  allPuzzlesImage: [],
+  cacheDownloadData: []
 }
 
 export const fileSlice = createSlice({
@@ -178,7 +260,12 @@ export const fileSlice = createSlice({
     },
     puzzleCategory: (state, action) => {
       state.category = action.payload;
+    },
+
+    setDownloadData: (state, action) => {
+      state.cacheDownloadData = [...state.cacheDownloadData, action.payload]
     }
+
   },
   extraReducers: (builder) => {
 
@@ -201,6 +288,16 @@ export const fileSlice = createSlice({
       }).
       addCase(getPuzzleByPuzzleId.rejected, (state, action) => {
 
+      }).
+
+      addCase(getAllPuzzles.pending, (state, action) => {
+
+      }).
+      addCase(getAllPuzzles.fulfilled, (state, action) => {
+        state.allPuzzlesImage = action.payload;
+      }).
+      addCase(getAllPuzzles.rejected, (state, action) => {
+
       })
 
   }
@@ -209,4 +306,4 @@ export const fileSlice = createSlice({
 
 
 export default fileSlice.reducer
-export const { main0, one36, two64, three100, four144, five225, six400, puzzleCategory } = fileSlice.actions
+export const { main0, one36, two64, three100, four144, five225, six400, puzzleCategory, setDownloadData } = fileSlice.actions

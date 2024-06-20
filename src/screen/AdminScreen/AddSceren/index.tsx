@@ -17,10 +17,14 @@ const AddScreen = () => {
   const navigation: any = useNavigation();
   const { mainSize, oneSize, twoSize, threeSize, fourSize, fiveSize, sixSize } = useSelector((state: any) => state.file)
   const dispatch: any = useDispatch();
+  const [puzzleType, setPuzzleType] = useState<string>('genel');
 
   useEffect(() => {
-    setCategory(params)
-    dispatch(puzzleCategory(params))
+    const { category, puzzleType }: any = params
+
+    setPuzzleType(puzzleType)
+    setCategory(category)
+    dispatch(puzzleCategory(category))
   }, [])
 
   useEffect(() => {
@@ -34,7 +38,7 @@ const AddScreen = () => {
       // && 36 && twoSize == 64 && threeSize == 100 && fourSize == 144
       //  && fiveSize == 225 && sixSize == 400
     ) {
-      const response = await dispatch(addFile(null))
+      await dispatch(addFile(puzzleType))
       Alert.alert("Puzzle oluşturuluyor")
     } else {
       Alert.alert("Eksik parçaları tamamla !!")

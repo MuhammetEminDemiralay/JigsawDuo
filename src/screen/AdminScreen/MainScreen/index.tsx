@@ -4,20 +4,23 @@ import { styles } from './styles'
 import { useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { category } from '../../../data/category';
+
 
 const MainScreen = () => {
 
 
   const [files, setFiles] = useState<any>('');
   const dispatch: any = useDispatch();
-  const data = ['Hayvan', 'Bitki', 'Eşya', 'Nesne', 'Kuş', 'Böcek']
   const navigation: any = useNavigation();
   const [option, setOption] = useState<string>('add');
+  const [puzzleType, setPuzzleType] = useState('genel')
+
 
 
   return (
     <FlatList
-      data={data}
+      data={category}
 
       ListHeaderComponent={() => (
         <>
@@ -68,12 +71,44 @@ const MainScreen = () => {
               }
             </Text>
           </View>
+          <View style={[{ height: 60, marginBottom: 25 }, styles.puzzleType]}>
+            <Pressable
+              style={[
+                {
+                  backgroundColor: puzzleType == 'genel' ? '#ef233c' : '#333533'
+                },
+                styles.puzzleTypeBtn]}
+              onPress={() => setPuzzleType('genel')}
+            >
+              <Text style={styles.text}>Genel</Text>
+            </Pressable>
+            <Pressable
+              style={[
+                {
+                  backgroundColor: puzzleType == 'özel' ? '#ef233c' : '#333533'
+                },
+                styles.puzzleTypeBtn]}
+              onPress={() => setPuzzleType('özel')}
+            >
+              <Text style={styles.text}>Özel</Text>
+            </Pressable>
+            <Pressable
+              style={[
+                {
+                  backgroundColor: puzzleType == 'günlük' ? '#ef233c' : '#333533'
+                }
+                , styles.puzzleTypeBtn]}
+              onPress={() => setPuzzleType('günlük')}
+            >
+              <Text style={styles.text}>Günlük</Text>
+            </Pressable>
+          </View>
         </>
       )}
 
       renderItem={({ item, index }) => (
         <Pressable
-          onPress={() => navigation.navigate(`${option}`, item)}
+          onPress={() => navigation.navigate(`${option}`, { category: item, puzzleType: puzzleType })}
           style={({ pressed }) => [
             {
               backgroundColor: pressed ? '#ccc5b9' : '#333533'

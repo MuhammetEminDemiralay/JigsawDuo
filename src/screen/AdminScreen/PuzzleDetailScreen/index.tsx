@@ -15,8 +15,12 @@ const PuzzleDetailScreen = () => {
     const [detailInfo, setDetailInfo] = useState<any>();
 
     useEffect(() => {
+        console.log("PUZZLE DETAİL", params);
+
         setDetailInfo(params)
     }, [params])
+
+
 
     return (
         <View style={styles.mainContainer}>

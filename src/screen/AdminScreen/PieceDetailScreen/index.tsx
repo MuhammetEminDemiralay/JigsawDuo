@@ -12,17 +12,11 @@ const PieceDetailScreen = () => {
     const { puzzlePiece } = useSelector((state: any) => state.file)
 
     useEffect(() => {
+        console.log("PİECE DETAİL", params);
+
         dispatch(getPuzzleByPuzzleId(params))
     }, [params])
 
-
-    const al = () => {
-        for (let data of puzzlePiece) {
-            console.log(data.uri);
-
-        }
-
-    }
 
 
 

@@ -9,8 +9,6 @@ import { main0, one36, two64, three100, four144, five225, six400 } from '../../.
 
 
 
-const { width, height } = Dimensions.get("window")
-
 
 const ImageScreen = () => {
 

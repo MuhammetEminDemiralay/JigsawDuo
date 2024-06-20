@@ -11,15 +11,22 @@ const UpdateDeleteScreen = () => {
 
   const { params } = useRoute();
   const dispatch: any = useDispatch();
-  const { downloadData, category } = useSelector((state: any) => state.file)
+  const { downloadData } = useSelector((state: any) => state.file)
   const navigation: any = useNavigation();
+  const [puzzleType, setPuzzleType] = useState<string>('genel');
+  const [category, setCategory] = useState<any>()
+
+
 
   useEffect(() => {
+
+    const { category, puzzleType }: any = params
+    setPuzzleType(puzzleType)
+    setCategory(category)
     dispatch(getPuzzlesByCategory(params))
-    dispatch(puzzleCategory(params))
+    dispatch(puzzleCategory(category))
   }, [params])
 
-  console.log(category);
 
 
   return (
@@ -35,7 +42,7 @@ const UpdateDeleteScreen = () => {
         renderItem={({ item, index }) => (
           <Pressable
             style={styles.imageBox}
-            onPress={() => navigation.navigate('puzzleDetail', { puzzle: item, category: category })}
+            onPress={() => navigation.navigate('puzzleDetail', { puzzle: item, category: category, puzzleType: puzzleType })}
           >
             <Image style={styles.image} key={index} source={{ uri: item.downloadData }} />
           </Pressable>
