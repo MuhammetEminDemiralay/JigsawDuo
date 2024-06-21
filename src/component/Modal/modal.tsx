@@ -3,9 +3,8 @@ import { Dimensions, FlatList, Image, ImageStyle, Pressable, SafeAreaView, Style
 import ReactNativeModal from 'react-native-modal'
 import { AntDesign, Entypo, Ionicons, MaterialCommunityIcons, FontAwesome6 } from '@expo/vector-icons';
 import { styles } from './styles';
-import { numbers } from '../data';
-
-const { width, height } = Dimensions.get("window")
+import { useDispatch } from 'react-redux';
+import { setGameMode, setGameOption, setGamePerson } from '../../redux/fileSlice';
 
 const Modal = ({ isVisible, setVisible, item }: any) => {
 
@@ -15,9 +14,16 @@ const Modal = ({ isVisible, setVisible, item }: any) => {
     const [personOption, setPersonOption] = useState('1');
     const [difficultOption, setDifficultOption] = useState('36')
     const [piece, setPiece] = useState('classic')
+    const dispatch: any = useDispatch();
 
 
-    console.log(piece);
+    const startGame = () => {
+        const path = `${item.fullPath}/${difficultOption}`
+        dispatch(setGamePerson(personOption))
+        dispatch(setGameOption(path))
+        dispatch(setGameMode(true))
+    }
+
 
 
     return (
@@ -44,7 +50,7 @@ const Modal = ({ isVisible, setVisible, item }: any) => {
 
                 {/* Resim */}
                 <View style={styles.imageBox}>
-                    <Image style={styles.image} source={{ uri: item }} />
+                    <Image style={styles.image} source={{ uri: item.downloadData }} />
                 </View>
 
                 {/* Seçenekler */}
@@ -122,7 +128,7 @@ const Modal = ({ isVisible, setVisible, item }: any) => {
                     </View>
 
                     <View style={styles.startBox}>
-                        <Pressable style={styles.startBtnBox}>
+                        <Pressable onPress={() => startGame()} style={styles.startBtnBox}>
                             <Text style={styles.startBtnText}>Start</Text>
                         </Pressable>
                     </View>

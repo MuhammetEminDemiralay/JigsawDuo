@@ -3,7 +3,7 @@ import { Button, Dimensions, FlatList, Image, Pressable, Text, View } from 'reac
 import { styles } from './styles'
 import Modal from '../../component/Modal/modal'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAllPuzzles, getPuzzlesByCategory } from '../../redux/fileSlice'
+import { getAllPuzzles } from '../../redux/fileSlice'
 
 const { width, height } = Dimensions.get("window")
 
@@ -47,7 +47,7 @@ const HomeScreen = () => {
                 key={index}
                 onPress={() => {
                   setVisible(true)
-                  setItem(item.downloadData)
+                  setItem(item)
                 }}
               >
                 {

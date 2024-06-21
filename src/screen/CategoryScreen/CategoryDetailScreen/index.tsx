@@ -45,7 +45,7 @@ const CategoryDetailScreen = () => {
                                 key={index}
                                 onPress={() => {
                                     setVisible(true)
-                                    setItem(item.downloadData)
+                                    setItem(item)
                                 }}
                             >
                                 {
@@ -62,7 +62,6 @@ const CategoryDetailScreen = () => {
                     :
                     <Modal item={item} isVisible={visible} setVisible={setVisible} />
             }
-
         </View>
     )
 }

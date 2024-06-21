@@ -1,12 +1,29 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
+
+const { width, height } = Dimensions.get("window")
+
 
 export const styles = StyleSheet.create({
-    container: {
+    mainContainer: {
+        backgroundColor: 'skyblue',
         width: '100%',
         height: '100%',
-        backgroundColor: 'green',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+    },
+    container: {
+        width: width * 0.9, minHeight: height * 0.925
+    },
+    columnWrapper: {
+        justifyContent: 'space-between', marginVertical: width * 0.025
+    },
+    box: {
+        width: width * 0.425, height: width * 0.425
+    },
+    imageBox: {
+        width: '100%',
+        height: '100%',
+        borderRadius: 10,
     },
     text: {
         fontSize: 20,

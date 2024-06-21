@@ -27,7 +27,7 @@ export const styles = StyleSheet.create({
     bottomBox: {
         width: '100%',
         height: (height * 0.175) - 60,
-        padding : 5
+        padding: 5
 
     },
     banner: {
@@ -39,12 +39,13 @@ export const styles = StyleSheet.create({
     pieceListContainer: {
         alignItems: 'center',
     },
-    pieceColumnWrapper : {
-        paddingHorizontal : 5
+    pieceColumnWrapper: {
+        paddingHorizontal: 5
     },
     image: {
         width: ((height * 0.15) - 60) / 1,
-        height: ((height * 0.15) - 60) / 1
+        height: ((height * 0.15) - 60) / 1,
+        resizeMode: 'contain'
     }
 
 })

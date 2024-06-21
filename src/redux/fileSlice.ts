@@ -51,36 +51,26 @@ export const getPuzzlesByCategory = createAsyncThunk('get/puzzlesByCategory', as
     if (params.puzzleType != null) {
       puzzleType = [params.puzzleType]
     } else {
-      puzzleType = ['file', 'genel', 'özel', 'günlük']      
+      puzzleType = ['file', 'genel', 'özel', 'günlük']
     }
 
-    
-    
-
     let datas: any[] = []
-
-
-    for (let type of puzzleType) { 
-      
-
-      console.log("TYPE ",type);
-      
-      
+    for (let type of puzzleType) {
       const categoryRef = ref(storage, `${type}/${params.category}`)
       const puzzle = await list(categoryRef)
-
       for (let data of puzzle.prefixes) {
-        let puzzleId = data.name;
-
         const puzzleRef = ref(storage, `${data.fullPath}/main`)
         const puzzleData = await list(puzzleRef)
+
+        let puzzleId = data.name;
+        let fullPath = data.fullPath;
 
         for (let data of puzzleData.items) {
           const downloadRef = ref(storage, `${data.fullPath}`)
           const metaData = await getMetadata(downloadRef);
           const docCreatedTime = metaData.timeCreated;
           const downloadData = await getDownloadURL(downloadRef)
-          datas.push({ id: puzzleId, downloadData: downloadData, time: docCreatedTime })
+          datas.push({ id: puzzleId, downloadData: downloadData, time: docCreatedTime, fullPath: fullPath })
         }
       }
     }
@@ -104,6 +94,79 @@ export const getPuzzlesByCategory = createAsyncThunk('get/puzzlesByCategory', as
   }
 })
 
+
+export const getPuzzlesBySpecial = createAsyncThunk('get/puzzlesSpeacial', async () => {
+  try {
+
+    let datas: any[] = []
+
+    const categoryRef = ref(storage, `özel`)
+    const puzzle = await list(categoryRef)
+
+    for (let data of puzzle.prefixes) {
+      const categoryRef = ref(storage, `${data.fullPath}`)
+      const puzzles = await list(categoryRef)
+      for (let puzzle of puzzles.prefixes) {
+        const puzzleRef = ref(storage, `${puzzle.fullPath}/main`)
+        const puzzleData = await list(puzzleRef)
+
+        let puzzleId = data.name;
+        let fullPath = data.fullPath;
+
+        for (let data of puzzleData.items) {
+          const downloadRef = ref(storage, `${data.fullPath}`)
+          const metaData = await getMetadata(downloadRef);
+          const docCreatedTime = metaData.timeCreated;
+          const downloadData = await getDownloadURL(downloadRef)
+          datas.push({ id: puzzleId, downloadData: downloadData, time: docCreatedTime, fullPath: fullPath })
+        }
+      }
+    }
+
+    return datas
+
+  } catch (error) {
+    throw error
+  }
+})
+
+export const getPuzzlesByDaily = createAsyncThunk('get/puzzlesDaily', async () => {
+  try {
+
+    let datas: any[] = []
+
+    const categoryRef = ref(storage, `günlük`)
+    const puzzle = await list(categoryRef)
+
+    for (let data of puzzle.prefixes) {
+      const categoryRef = ref(storage, `${data.fullPath}`)
+      const puzzles = await list(categoryRef)
+      for (let puzzle of puzzles.prefixes) {
+        const puzzleRef = ref(storage, `${puzzle.fullPath}/main`)
+        const puzzleData = await list(puzzleRef)
+
+        let puzzleId = data.name;
+        let fullPath = data.fullPath;
+
+        for (let data of puzzleData.items) {
+          const downloadRef = ref(storage, `${data.fullPath}`)
+          const metaData = await getMetadata(downloadRef);
+          const docCreatedTime = metaData.timeCreated;
+          const downloadData = await getDownloadURL(downloadRef)
+          datas.push({ id: puzzleId, downloadData: downloadData, time: docCreatedTime, fullPath: fullPath })
+        }
+      }
+    }
+
+    return datas
+
+  } catch (error) {
+    throw error
+  }
+})
+
+
+
 export const getPuzzleByPuzzleId = createAsyncThunk('get/puzzleByPuzzleId', async (info: any) => {
   try {
 
@@ -121,6 +184,7 @@ export const getPuzzleByPuzzleId = createAsyncThunk('get/puzzleByPuzzleId', asyn
       const downloadUri = await getDownloadURL(docRef)
       finalyData.push({ uri: downloadUri, puzzlePath: docRef.fullPath })
     }
+
     return finalyData
   } catch (error) {
     throw error
@@ -147,6 +211,7 @@ export const getAllPuzzles = createAsyncThunk('getAll/puzzles', async () => {
           const puzzleData = await list(puzzleRef)
 
           let puzzleId = data.name;
+          let fullPath = data.fullPath
 
           for (let data of puzzleData.items) {
             const downloadRef = ref(storage, `${data.fullPath}`)
@@ -154,7 +219,7 @@ export const getAllPuzzles = createAsyncThunk('getAll/puzzles', async () => {
             const docCreatedTime = metaData.timeCreated;
             const downloadData = await getDownloadURL(downloadRef)
 
-            finalyData.push({ id: puzzleId, downloadData: downloadData, time: docCreatedTime })
+            finalyData.push({ id: puzzleId, downloadData: downloadData, time: docCreatedTime, fullPath: fullPath })
           }
         }
       }
@@ -173,6 +238,28 @@ export const getAllPuzzles = createAsyncThunk('getAll/puzzles', async () => {
   }
 })
 
+
+export const getGamePuzzlePieces = createAsyncThunk('get/gamePuzzlePieces', async (data: null, { getState }) => {
+  try {
+
+    const state: any = getState()
+    const puzzlePath = state.file.gameOption;
+
+    const puzzleRef = ref(storage, `${puzzlePath}`)
+    const puzzlePiece = await list(puzzleRef)
+    let pieces: any[] = [];
+    for (let piece of puzzlePiece.items) {
+      const downloadRef = ref(storage, piece.fullPath)
+      const downloadData = await getDownloadURL(downloadRef)
+      pieces.push(downloadData)
+    }
+
+    return pieces
+
+  } catch (error) {
+
+  }
+})
 
 
 
@@ -197,7 +284,14 @@ type Model = {
   downloadData?: any[],
   puzzlePiece?: any[],
   allPuzzlesImage?: any[],
-  cacheDownloadData: any[]
+  cacheDownloadData: any[],
+  speacialPuzzle: any[],
+  dailyPuzzle: any[],
+
+  gameMode: boolean,
+  gameOption: any,
+  gamePerson: any,
+  gamePuzzlePieces?: any[]
 }
 
 const initialState: Model = {
@@ -219,7 +313,14 @@ const initialState: Model = {
   downloadData: [],
   puzzlePiece: [],
   allPuzzlesImage: [],
-  cacheDownloadData: []
+  cacheDownloadData: [],
+  speacialPuzzle: [],
+  dailyPuzzle: [],
+
+  gameMode: false,
+  gameOption: {},
+  gamePerson: {},
+  gamePuzzlePieces: []
 }
 
 export const fileSlice = createSlice({
@@ -264,8 +365,18 @@ export const fileSlice = createSlice({
 
     setDownloadData: (state, action) => {
       state.cacheDownloadData = [...state.cacheDownloadData, action.payload]
-    }
+    },
 
+    setGameMode: (state, action) => {
+      state.gameMode = action.payload;
+    },
+
+    setGameOption: (state, action) => {
+      state.gameOption = action.payload;
+    },
+    setGamePerson: (state, action) => {
+      state.gamePerson = action.payload;
+    }
   },
   extraReducers: (builder) => {
 
@@ -298,6 +409,38 @@ export const fileSlice = createSlice({
       }).
       addCase(getAllPuzzles.rejected, (state, action) => {
 
+      }).
+
+
+      addCase(getPuzzlesBySpecial.pending, (state, action) => {
+
+      }).
+      addCase(getPuzzlesBySpecial.fulfilled, (state, action) => {
+        state.speacialPuzzle = action.payload;
+      }).
+      addCase(getPuzzlesBySpecial.rejected, (state, action) => {
+
+      }).
+
+      addCase(getPuzzlesByDaily.pending, (state, action) => {
+
+      }).
+      addCase(getPuzzlesByDaily.fulfilled, (state, action) => {
+        state.dailyPuzzle = action.payload;
+      }).
+      addCase(getPuzzlesByDaily.rejected, (state, action) => {
+
+      }).
+
+
+      addCase(getGamePuzzlePieces.pending, (state, action) => {
+
+      }).
+      addCase(getGamePuzzlePieces.fulfilled, (state, action) => {
+        state.gamePuzzlePieces = action.payload;
+      }).
+      addCase(getGamePuzzlePieces.rejected, (state, action) => {
+
       })
 
   }
@@ -306,4 +449,4 @@ export const fileSlice = createSlice({
 
 
 export default fileSlice.reducer
-export const { main0, one36, two64, three100, four144, five225, six400, puzzleCategory, setDownloadData } = fileSlice.actions
+export const { setGameMode, setGameOption, setGamePerson, main0, one36, two64, three100, four144, five225, six400, puzzleCategory, setDownloadData } = fileSlice.actions
