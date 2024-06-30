@@ -249,9 +249,10 @@ export const getGamePuzzlePieces = createAsyncThunk('get/gamePuzzlePieces', asyn
     const puzzlePiece = await list(puzzleRef)
     let pieces: any[] = [];
     for (let piece of puzzlePiece.items) {
+      const name = piece.name.split(".")
       const downloadRef = ref(storage, piece.fullPath)
-      const downloadData = await getDownloadURL(downloadRef)
-      pieces.push(downloadData)
+      const uri = await getDownloadURL(downloadRef)
+      pieces.push({ uri: uri, name: name[0] })
     }
 
     return pieces
@@ -291,7 +292,10 @@ type Model = {
   gameMode: boolean,
   gameOption: any,
   gamePerson: any,
-  gamePuzzlePieces?: any[]
+  gamePuzzlePieces?: any[],
+  alonePiece: any[],
+  length: number,
+  startPosition: any
 }
 
 const initialState: Model = {
@@ -320,7 +324,10 @@ const initialState: Model = {
   gameMode: false,
   gameOption: {},
   gamePerson: {},
-  gamePuzzlePieces: []
+  gamePuzzlePieces: [],
+  alonePiece: [],
+  length: 0,
+  startPosition : {}
 }
 
 export const fileSlice = createSlice({
@@ -376,7 +383,19 @@ export const fileSlice = createSlice({
     },
     setGamePerson: (state, action) => {
       state.gamePerson = action.payload;
+    },
+    removePuzzlePiece: (state, action) => {
+      state.gamePuzzlePieces = state.gamePuzzlePieces?.filter(piece => piece.uri != action.payload.uri)
+    },
+    setLength: (state, action) => {
+      state.length = action.payload
+    },
+    setArenaStartPosition: (state, action) => {
+      state.startPosition = action.payload;
     }
+
+
+
   },
   extraReducers: (builder) => {
 
@@ -449,4 +468,4 @@ export const fileSlice = createSlice({
 
 
 export default fileSlice.reducer
-export const { setGameMode, setGameOption, setGamePerson, main0, one36, two64, three100, four144, five225, six400, puzzleCategory, setDownloadData } = fileSlice.actions
+export const { setArenaStartPosition, setLength, removePuzzlePiece, setGameMode, setGameOption, setGamePerson, main0, one36, two64, three100, four144, five225, six400, puzzleCategory, setDownloadData } = fileSlice.actions
