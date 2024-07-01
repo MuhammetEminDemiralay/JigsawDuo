@@ -14,24 +14,32 @@ const Pan = ({ state, setState }: any) => {
 
 
         if ((state.absoluteX - 10) < absoluteX && absoluteX < (state.absoluteX + 10) && (state.absoluteY - 10) < absoluteY && absoluteY < (state.absoluteY + 10)) {
-            setState({ uri: state.uri, name: state?.name, x: state.absoluteX, y: state.absoluteY, absoluteX: state.absoluteX, absoluteY: state.absoluteY, enabled: false })
+            setState({
+                uri: state.uri,
+                name: state?.name,
+                x: state.absoluteX,
+                y: state.absoluteY,
+                absoluteX: state.absoluteX,
+                absoluteY: state.absoluteY,
+                enabled: false,
+                zIndex: false
+            })
         } else {
-            setState({ uri: state.uri, name: state?.name, x: absoluteX, y: absoluteY, absoluteX: state.absoluteX, absoluteY: state.absoluteY, enabled: true })
+            setState({
+                uri: state.uri,
+                name: state?.name,
+                x: absoluteX,
+                y: absoluteY,
+                absoluteX: state.absoluteX,
+                absoluteY: state.absoluteY,
+                enabled: true,
+                zIndex: true
+            })
         }
-        // console.log("PAN X", absoluteX);
-        // console.log("PAN Y", absoluteY);
-        // console.log(state);
     }
 
-    const [active, setActive] = useState<any>(false)
 
-    const activeted = () => {
-        setActive(true)
-    }
 
-    const ended = () => {
-        setActive(false)
-    }
 
     return (
         <>
@@ -40,21 +48,18 @@ const Pan = ({ state, setState }: any) => {
                 <PanGestureHandler
                     onGestureEvent={(event) => startHandleGesture(event)}
                     enabled={state.enabled}
-                    onActivated={() => activeted()}
-                    onEnded={() => ended()}
                 >
                     < Image
                         style={{
                             width: (width * 0.95) / length,
                             height: (width * 0.95) / length,
                             position: 'absolute',
-                            zIndex: 10,
+                            zIndex: state.zIndex ? 2 : 1,
                             transform: state.x && state.y && [
-                                { translateX: state.x },
-                                { translateY: state.y }
+                                { translateX: state.x - (((width * 0.95) / length) / 2) },
+                                { translateY: state.y - (((width * 0.95) / length) * 1.5) }
                             ],
                             resizeMode: 'cover',
-                            backgroundColor: 'red'
                         }}
                         source={{ uri: state?.uri }}
                     />

@@ -11,12 +11,14 @@ export const styles = StyleSheet.create({
     },
     topBox: {
         width: '100%',
-        height: (height * 0.2) - 60
+        minHeight: (height * 0.2) - 60,
+        maxHeight: (height * 0.2) - 60,
     },
     mainBox: {
         width: '100%',
         minHeight: (height * 0.6),
-        backgroundColor: 'purple',
+        maxHeight: (height * 0.6),
+        backgroundColor: '#2a9d8f',
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -30,12 +32,20 @@ export const styles = StyleSheet.create({
     },
     bottomBox: {
         width: '100%',
-        height: (height * 0.2) - 60,
+        minHeight: (height * 0.2) - 60,
+        maxHeight: (height * 0.2) - 60,
     },
-
-    puzzleWrapper: {
+    topPuzzleWrapper: {
+        borderTopWidth: 25,
+        borderColor: '#e9c46a',
+        paddingTop: 5,
+        paddingHorizontal: 5,
+        height: '100%',
+        justifyContent: 'center'
+    },
+    bottomPuzzleWrapper: {
         borderBottomWidth: 25,
-        borderBottomColor: 'gray',
+        borderBottomColor: '#e9c46a',
         paddingBottom: 5,
         paddingHorizontal: 5,
         height: '100%',
@@ -45,7 +55,6 @@ export const styles = StyleSheet.create({
         width: '100%',
         height: 60,
     },
-
     pieceListContainer: {
     },
     pieceColumnWrapper: {
@@ -57,13 +66,22 @@ export const styles = StyleSheet.create({
         height: ((height * 0.15) - 60) / 1,
         resizeMode: 'contain'
     },
-
-    right: {
+    topRight: {
+        position: 'absolute',
+        top: 0,
+        right: 10
+    },
+    topLeft: {
+        position: 'absolute',
+        top: 0,
+        left: 10
+    },
+    bottomRight: {
         position: 'absolute',
         bottom: 0,
         right: 10
     },
-    left: {
+    bottomLeft: {
         position: 'absolute',
         bottom: 0,
         left: 10

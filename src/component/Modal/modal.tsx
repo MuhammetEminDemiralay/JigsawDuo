@@ -11,7 +11,7 @@ const Modal = ({ isVisible, setVisible, item }: any) => {
     const difficultData = ['36', '64', '100', '144', '225', '400']
     const pieceData = ['classic', 'square', 'stick']
 
-    const [personOption, setPersonOption] = useState('1');
+    const [personOption, setPersonOption] = useState<string>('1');
     const [difficultOption, setDifficultOption] = useState('36')
     const [piece, setPiece] = useState('classic')
     const dispatch: any = useDispatch();

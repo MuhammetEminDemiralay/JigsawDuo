@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getGamePuzzlePieces, removePuzzlePiece, setArenaStartPosition, setGameMode, setLength, } from '../../redux/fileSlice';
 import { GestureHandlerRootView, PanGestureHandler, State } from 'react-native-gesture-handler';
 import { Entypo, AntDesign } from '@expo/vector-icons';
-import Pan from '../../component/Pan';
+import Pan from '../../component/Pan';  
 
 
 const { width, height } = Dimensions.get("window")
@@ -14,19 +14,25 @@ const GameScreen = () => {
 
     const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]
     const dispatch: any = useDispatch();
-    const { gamePuzzlePieces, gameOption, length, startPosition } = useSelector((state: any) => state.file)
+    const { gamePuzzlePieces, gameOption, gamePerson, length, startPosition } = useSelector((state: any) => state.file)
 
 
     useEffect(() => {
 
         dispatch(getGamePuzzlePieces(null))
         const pieceCount = gameOption.split("/").pop();
-        dispatch(setLength(Math.sqrt(pieceCount)))
+        dispatch(setLength(Math.sqrt(pieceCount)));
+        console.log("GAME SCREEN", gamePerson);
+
     }, [])
 
     const closeGame = () => {
         dispatch(setGameMode(false))
     }
+
+    console.log("ONEperson", gamePuzzlePieces.onePersonPuzzlePieces);
+    console.log("TWOpERSON", gamePuzzlePieces.twoPersonPuzzlePieces);
+
 
 
 
@@ -444,7 +450,6 @@ const GameScreen = () => {
             const remainder = number % length;
             const layer = Math.floor(number / length);
 
-
             let absoluteX;
             let absoluteY;
 
@@ -473,9 +478,10 @@ const GameScreen = () => {
                 name: item.name,
                 x: event.nativeEvent.absoluteX,
                 y: event.nativeEvent.absoluteY,
-                absoluteX: absoluteX,
-                absoluteY: absoluteY,
-                enabled: true
+                absoluteX: absoluteX + (((width * 0.95) / length) / 2),
+                absoluteY: absoluteY + (((width * 0.95) / length) * 1.5),
+                enabled: true,
+                zIndex: true
             }
 
             if (0 < number && number <= 10) {
@@ -1335,10 +1341,6 @@ const GameScreen = () => {
 
 
 
-
-
-
-
             <View style={styles.banner}>
 
             </View>
@@ -1348,20 +1350,43 @@ const GameScreen = () => {
                 name="closecircle" size={30} color="black"
                 onPress={closeGame}
             />
-            <View style={styles.topBox}>
-                <FlatList
-                    data={data}
-                    renderItem={({ item, index }) => (
-                        <View style={styles.pieceColumnWrapper}>
 
-                            {/* < Image style={styles.image} key={index} source={require(`./image/1.png`)} />
-                             */}
-                        </View>
-                    )}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={styles.pieceListContainer}
-                />
+
+
+            {/* İKİNCİ KİŞİ */}
+            <View style={styles.topBox}>
+                {
+                    gamePerson == "2" &&
+                    <>
+                        <FlatList
+                            data={gamePuzzlePieces.twoPersonPuzzlePieces}
+                            renderItem={({ item, index }) => (
+                                <View
+                                    style={styles.topPuzzleWrapper}
+                                    key={index}
+                                >
+                                    {
+                                        item &&
+                                        <PanGestureHandler
+                                            onHandlerStateChange={(event) => onHandlerStateChange(event, item)}
+                                        >
+                                            < Image
+                                                style={styles.image}
+                                                source={{ uri: item.uri }}
+                                                resizeMode='contain'
+                                            />
+                                        </PanGestureHandler>
+                                    }
+                                </View>
+                            )}
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={styles.pieceListContainer}
+                        />
+                        <Entypo style={styles.topLeft} name="arrow-long-left" size={24} color="#fff" />
+                        <Entypo style={styles.topRight} name="arrow-long-right" size={24} color="#fff" />
+                    </>
+                }
             </View>
 
 
@@ -1371,34 +1396,17 @@ const GameScreen = () => {
                 onLayout={(event) => handleLayout(event)}
                 style={styles.arena}
             >
-                <FlatList
-                    data={data}
-                    numColumns={6}
 
-                    renderItem={({ item, index }) => (
-                        <View
-                            style={{
-                                width: (width * 0.95) / 6,
-                                height: (width * 0.95) / 6,
-                                borderWidth: 0.5,
-                                borderColor: 'red'
-                            }}
-                        >
-                        </View>
-                    )}
-                    contentContainerStyle={{ zIndex: 55, width: width * 0.95, height: width * 0.95 }}
-                />
             </View>
 
 
-
-
+            {/* BİRİNCİ KİŞİ  */}
             <View style={styles.bottomBox}>
                 <FlatList
-                    data={gamePuzzlePieces}
+                    data={gamePuzzlePieces.onePersonPuzzlePieces}
                     renderItem={({ item, index }) => (
                         <View
-                            style={styles.puzzleWrapper}
+                            style={styles.bottomPuzzleWrapper}
                             key={index}
                         >
                             {
@@ -1419,8 +1427,8 @@ const GameScreen = () => {
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={styles.pieceListContainer}
                 />
-                <Entypo style={styles.left} name="arrow-long-left" size={24} color="#fff" />
-                <Entypo style={styles.right} name="arrow-long-right" size={24} color="#fff" />
+                <Entypo style={styles.bottomLeft} name="arrow-long-left" size={24} color="#fff" />
+                <Entypo style={styles.bottomRight} name="arrow-long-right" size={24} color="#fff" />
             </View>
 
             <View style={styles.banner}>

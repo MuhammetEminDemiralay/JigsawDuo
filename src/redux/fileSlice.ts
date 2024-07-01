@@ -244,18 +244,46 @@ export const getGamePuzzlePieces = createAsyncThunk('get/gamePuzzlePieces', asyn
 
     const state: any = getState()
     const puzzlePath = state.file.gameOption;
+    const gamePerson = state.file.gamePerson;
+
+    console.log("kaç kişilik", gamePerson);
+
 
     const puzzleRef = ref(storage, `${puzzlePath}`)
     const puzzlePiece = await list(puzzleRef)
-    let pieces: any[] = [];
+
+    const halfPieces = (puzzlePiece.items.length / 2)
+
+    let onePersonPieces: any[] = [];
+    let twoPersonPieces: any[] = [];
+
     for (let piece of puzzlePiece.items) {
+
       const name = piece.name.split(".")
       const downloadRef = ref(storage, piece.fullPath)
       const uri = await getDownloadURL(downloadRef)
-      pieces.push({ uri: uri, name: name[0] })
+
+      if (gamePerson == '1') {
+        onePersonPieces.push({ uri: uri, name: name[0] })
+      }
+      else if (gamePerson == '2' && onePersonPieces.length < halfPieces) {
+        onePersonPieces.push({ uri: uri, name: name[0] })
+      } else if (gamePerson == '2' && onePersonPieces.length >= halfPieces) {
+        twoPersonPieces.push({ uri: uri, name: name[0] })
+      }
     }
 
-    return pieces
+    console.log("BİRİNCİ", onePersonPieces.length);
+    console.log("İkincii", twoPersonPieces.length);
+
+
+
+    const puzzlePieces = {
+      onePersonPuzzlePieces: onePersonPieces,
+      twoPersonPuzzlePieces: twoPersonPieces
+    }
+
+    return puzzlePieces
 
   } catch (error) {
 
@@ -291,8 +319,8 @@ type Model = {
 
   gameMode: boolean,
   gameOption: any,
-  gamePerson: any,
-  gamePuzzlePieces?: any[],
+  gamePerson: string,
+  gamePuzzlePieces?: any,
   alonePiece: any[],
   length: number,
   startPosition: any
@@ -323,11 +351,11 @@ const initialState: Model = {
 
   gameMode: false,
   gameOption: {},
-  gamePerson: {},
-  gamePuzzlePieces: [],
+  gamePerson: "",
+  gamePuzzlePieces: {},
   alonePiece: [],
   length: 0,
-  startPosition : {}
+  startPosition: {}
 }
 
 export const fileSlice = createSlice({
@@ -382,10 +410,12 @@ export const fileSlice = createSlice({
       state.gameOption = action.payload;
     },
     setGamePerson: (state, action) => {
+      console.log("SLİCE PERSON OPTİON");
+
       state.gamePerson = action.payload;
     },
     removePuzzlePiece: (state, action) => {
-      state.gamePuzzlePieces = state.gamePuzzlePieces?.filter(piece => piece.uri != action.payload.uri)
+      // state.gamePuzzlePieces = state.gamePuzzlePieces?.filter(piece => piece.uri != action.payload.uri)
     },
     setLength: (state, action) => {
       state.length = action.payload
