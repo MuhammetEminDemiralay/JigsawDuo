@@ -11,8 +11,8 @@ export const styles = StyleSheet.create({
     },
     topBox: {
         width: '100%',
-        minHeight: (height * 0.2) - 60,
-        maxHeight: (height * 0.2) - 60,
+        minHeight: (height * 0.18) - 60,
+        maxHeight: (height * 0.18) - 60,
     },
     mainBox: {
         width: '100%',
@@ -32,24 +32,18 @@ export const styles = StyleSheet.create({
     },
     bottomBox: {
         width: '100%',
-        minHeight: (height * 0.2) - 60,
-        maxHeight: (height * 0.2) - 60,
+        minHeight: (height * 0.18) - 60,
+        maxHeight: (height * 0.18) - 60,
     },
     topPuzzleWrapper: {
-        borderTopWidth: 25,
-        borderColor: '#e9c46a',
-        paddingTop: 5,
         paddingHorizontal: 5,
         height: '100%',
         justifyContent: 'center'
     },
     bottomPuzzleWrapper: {
-        borderBottomWidth: 25,
-        borderBottomColor: '#e9c46a',
-        paddingBottom: 5,
         paddingHorizontal: 5,
         height: '100%',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     banner: {
         width: '100%',
@@ -62,9 +56,9 @@ export const styles = StyleSheet.create({
     },
 
     image: {
-        width: ((height * 0.15) - 60) / 1,
-        height: ((height * 0.15) - 60) / 1,
-        resizeMode: 'contain'
+        width: ((height * 0.15) - 60),
+        height: ((height * 0.15) - 60),
+        resizeMode: 'contain',
     },
     topRight: {
         position: 'absolute',
@@ -85,5 +79,12 @@ export const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 0,
         left: 10
+    },
+    handBox: {
+        width: '100%',
+        height: width * 0.04,
+        backgroundColor: 'black',
+    },
+    hand: {
     }
 })

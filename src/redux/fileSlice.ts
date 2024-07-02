@@ -246,9 +246,6 @@ export const getGamePuzzlePieces = createAsyncThunk('get/gamePuzzlePieces', asyn
     const puzzlePath = state.file.gameOption;
     const gamePerson = state.file.gamePerson;
 
-    console.log("kaç kişilik", gamePerson);
-
-
     const puzzleRef = ref(storage, `${puzzlePath}`)
     const puzzlePiece = await list(puzzleRef)
 
@@ -273,15 +270,14 @@ export const getGamePuzzlePieces = createAsyncThunk('get/gamePuzzlePieces', asyn
       }
     }
 
-    console.log("BİRİNCİ", onePersonPieces.length);
-    console.log("İkincii", twoPersonPieces.length);
-
-
 
     const puzzlePieces = {
       onePersonPuzzlePieces: onePersonPieces,
       twoPersonPuzzlePieces: twoPersonPieces
     }
+
+    console.log("Puzzle parçaları", puzzlePieces);
+
 
     return puzzlePieces
 
@@ -410,12 +406,12 @@ export const fileSlice = createSlice({
       state.gameOption = action.payload;
     },
     setGamePerson: (state, action) => {
-      console.log("SLİCE PERSON OPTİON");
-
       state.gamePerson = action.payload;
     },
+    //  iKİ KİŞİLİK DURUM KONTROLÜ
     removePuzzlePiece: (state, action) => {
-      // state.gamePuzzlePieces = state.gamePuzzlePieces?.filter(piece => piece.uri != action.payload.uri)
+      // state.gamePuzzlePieces = state.gamePuzzlePieces?.onePersonPuzzlePieces?.filter((piece: any) => piece.uri != action.payload.uri)
+      // state.gamePuzzlePieces = state.gamePuzzlePieces?.twoPersonPuzzlePieces?.filter((piece: any) => piece.uri != action.payload.uri)
     },
     setLength: (state, action) => {
       state.length = action.payload

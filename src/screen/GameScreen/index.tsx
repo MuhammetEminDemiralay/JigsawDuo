@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import { Dimensions, FlatList, Image, LayoutChangeEvent, Text, View } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
+import { Button, Dimensions, FlatList, Image, LayoutChangeEvent, Text, View } from 'react-native'
 import { styles } from './styles'
 import { useDispatch, useSelector } from 'react-redux';
 import { getGamePuzzlePieces, removePuzzlePiece, setArenaStartPosition, setGameMode, setLength, } from '../../redux/fileSlice';
-import { GestureHandlerRootView, PanGestureHandler, State } from 'react-native-gesture-handler';
-import { Entypo, AntDesign } from '@expo/vector-icons';
-import Pan from '../../component/Pan';  
+import { GestureHandlerRootView, PanGestureHandler, PanGestureHandlerGestureEvent, State } from 'react-native-gesture-handler';
+import { Entypo, AntDesign, Ionicons } from '@expo/vector-icons';
+import Pan from '../../component/Pan';
 
 
 const { width, height } = Dimensions.get("window")
@@ -22,7 +22,6 @@ const GameScreen = () => {
         dispatch(getGamePuzzlePieces(null))
         const pieceCount = gameOption.split("/").pop();
         dispatch(setLength(Math.sqrt(pieceCount)));
-        console.log("GAME SCREEN", gamePerson);
 
     }, [])
 
@@ -30,10 +29,46 @@ const GameScreen = () => {
         dispatch(setGameMode(false))
     }
 
-    console.log("ONEperson", gamePuzzlePieces.onePersonPuzzlePieces);
-    console.log("TWOpERSON", gamePuzzlePieces.twoPersonPuzzlePieces);
+    const [oneHandTranslateX, setOneHandTranslateX] = useState<any>(5);
 
+    const oneHandGestureEvent = (event: PanGestureHandlerGestureEvent) => {
+        const { absoluteX } = event.nativeEvent;
+        if (absoluteX + 10 < screenWidth) {
+            setOneHandTranslateX(absoluteX);
 
+            const kat = flatlistWidth / screenWidth
+            const konum = absoluteX * kat
+
+            if (oneFlatListRef.current) {
+                oneFlatListRef.current.scrollToOffset({ offset: konum, animated: true });
+            }
+        }
+    }
+
+    const [twoHandTranslateX, setTwoHandTranslateX] = useState<any>(5);
+    const twoHandGestureEvent = (event: PanGestureHandlerGestureEvent) => {
+        const { absoluteX } = event.nativeEvent;
+        if (absoluteX + 10 < screenWidth) {
+            setTwoHandTranslateX(absoluteX);
+
+            const kat = flatlistWidth / screenWidth
+            const konum = absoluteX * kat
+
+            if (twoFlatListRef.current) {
+                twoFlatListRef.current.scrollToOffset({ offset: konum, animated: true });
+            }
+        }
+    }
+
+    const oneFlatListRef = useRef<FlatList>(null);
+    const twoFlatListRef = useRef<FlatList>(null);
+
+    const [flatlistWidth, setFlatlistWidth] = useState<any>()
+    const [screenWidth, setScreenWidth] = useState<any>();
+
+    const screenLayout = (event: LayoutChangeEvent) => {
+        setScreenWidth(event.nativeEvent.layout.width)
+    }
 
 
     const [state1, setState1] = useState<any>()
@@ -445,6 +480,9 @@ const GameScreen = () => {
         if (event.nativeEvent.state === State.END) {
             dispatch(removePuzzlePiece(item))
 
+            console.log("HOPPALA", item);
+            
+
             const number = Number(item.name)
 
             const remainder = number % length;
@@ -456,21 +494,16 @@ const GameScreen = () => {
             if (number <= length) {
                 absoluteX = startPosition.x + (number - 1) * panWidth;
                 absoluteY = startPosition.y
-                console.log("SAYI LENGTH TEN KISA VEYA EŞİT");
             }
             else if (remainder == 1) {
                 absoluteX = startPosition.x;
                 absoluteY = startPosition.y + layer * panWidth;
-                console.log("KALAN 1");
             } else if (number > length && remainder != 1 && remainder != 0) {
                 absoluteX = startPosition.x + (remainder - 1) * panWidth;
                 absoluteY = startPosition.y + (layer * panWidth);
-                console.log("ABSOLLLUTE", absoluteY);
-                console.log("SAYI LENGTTEN BÜYÜK VE KALAN 1 DEĞİL VE KALAN 0 DEĞİL");
             } else if (number > length && remainder == 0) {
                 absoluteX = startPosition.x + (length - 1) * panWidth;
                 absoluteY = startPosition.y + (layer - 1) * panWidth;
-                console.log("SAYI LENGT TEN BÜYÜK VE KALAN 0");
             }
 
             const newItem = {
@@ -1345,14 +1378,38 @@ const GameScreen = () => {
 
             </View>
 
-            <AntDesign
+            {/* <AntDesign
                 style={{ position: 'absolute', right: 20, top: 20 }}
                 name="closecircle" size={30} color="black"
                 onPress={closeGame}
-            />
+            /> */}
 
 
-
+            {/* Hand */}
+            <View
+                style={styles.handBox}
+                onLayout={(event) => screenLayout(event)}
+            >
+                <PanGestureHandler
+                    onGestureEvent={(event) => twoHandGestureEvent(event)}
+                >
+                    <Ionicons
+                        style={[{
+                            transform: twoHandTranslateX && [
+                                { translateX: twoHandTranslateX },
+                                { translateY: -20 },
+                                { rotate: '180deg' }
+                            ],
+                            zIndex: 99,
+                            position: 'absolute',
+                        },
+                        styles.hand]}
+                        name="hand-right"
+                        size={35}
+                        color="blue"
+                    />
+                </PanGestureHandler>
+            </View>
             {/* İKİNCİ KİŞİ */}
             <View style={styles.topBox}>
                 {
@@ -1360,6 +1417,7 @@ const GameScreen = () => {
                     <>
                         <FlatList
                             data={gamePuzzlePieces.twoPersonPuzzlePieces}
+                            ref={twoFlatListRef}
                             renderItem={({ item, index }) => (
                                 <View
                                     style={styles.topPuzzleWrapper}
@@ -1383,8 +1441,6 @@ const GameScreen = () => {
                             showsHorizontalScrollIndicator={false}
                             contentContainerStyle={styles.pieceListContainer}
                         />
-                        <Entypo style={styles.topLeft} name="arrow-long-left" size={24} color="#fff" />
-                        <Entypo style={styles.topRight} name="arrow-long-right" size={24} color="#fff" />
                     </>
                 }
             </View>
@@ -1404,6 +1460,8 @@ const GameScreen = () => {
             <View style={styles.bottomBox}>
                 <FlatList
                     data={gamePuzzlePieces.onePersonPuzzlePieces}
+                    ref={oneFlatListRef}
+                    onContentSizeChange={(w: number) => setFlatlistWidth(w)}
                     renderItem={({ item, index }) => (
                         <View
                             style={styles.bottomPuzzleWrapper}
@@ -1427,8 +1485,35 @@ const GameScreen = () => {
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={styles.pieceListContainer}
                 />
-                <Entypo style={styles.bottomLeft} name="arrow-long-left" size={24} color="#fff" />
-                <Entypo style={styles.bottomRight} name="arrow-long-right" size={24} color="#fff" />
+
+
+
+            </View>
+
+
+            {/* Hand */}
+            <View
+                style={styles.handBox}
+                onLayout={(event) => screenLayout(event)}
+            >
+                <PanGestureHandler
+                    onGestureEvent={(event) => oneHandGestureEvent(event)}
+                >
+                    <Ionicons
+                        style={[{
+                            transform: oneHandTranslateX && [
+                                { translateX: oneHandTranslateX },
+                                { translateY: 0 }
+                            ],
+                            zIndex: 99,
+                            position: 'absolute',
+                        },
+                        styles.hand]}
+                        name="hand-right"
+                        size={35}
+                        color="red"
+                    />
+                </PanGestureHandler>
             </View>
 
             <View style={styles.banner}>
