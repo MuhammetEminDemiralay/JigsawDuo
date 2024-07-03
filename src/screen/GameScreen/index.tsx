@@ -16,9 +16,7 @@ const GameScreen = () => {
     const dispatch: any = useDispatch();
     const { gamePuzzlePieces, gameOption, gamePerson, length, startPosition } = useSelector((state: any) => state.file)
 
-
     useEffect(() => {
-
         dispatch(getGamePuzzlePieces(null))
         const pieceCount = gameOption.split("/").pop();
         dispatch(setLength(Math.sqrt(pieceCount)));
@@ -30,44 +28,54 @@ const GameScreen = () => {
     }
 
     const [oneHandTranslateX, setOneHandTranslateX] = useState<any>(5);
-
-    const oneHandGestureEvent = (event: PanGestureHandlerGestureEvent) => {
-        const { absoluteX } = event.nativeEvent;
-        if (absoluteX + 10 < screenWidth) {
-            setOneHandTranslateX(absoluteX);
-
-            const kat = flatlistWidth / screenWidth
-            const konum = absoluteX * kat
-
-            if (oneFlatListRef.current) {
-                oneFlatListRef.current.scrollToOffset({ offset: konum, animated: true });
-            }
-        }
-    }
-
     const [twoHandTranslateX, setTwoHandTranslateX] = useState<any>(5);
-    const twoHandGestureEvent = (event: PanGestureHandlerGestureEvent) => {
-        const { absoluteX } = event.nativeEvent;
-        if (absoluteX + 10 < screenWidth) {
-            setTwoHandTranslateX(absoluteX);
-
-            const kat = flatlistWidth / screenWidth
-            const konum = absoluteX * kat
-
-            if (twoFlatListRef.current) {
-                twoFlatListRef.current.scrollToOffset({ offset: konum, animated: true });
-            }
-        }
-    }
 
     const oneFlatListRef = useRef<FlatList>(null);
     const twoFlatListRef = useRef<FlatList>(null);
 
-    const [flatlistWidth, setFlatlistWidth] = useState<any>()
+    const [oneFlatlistWidth, setOneFlatlistWidth] = useState<any>();
+    const [twoFlatlistWidth, setTwoFlatlistWidth] = useState<any>();
+
     const [screenWidth, setScreenWidth] = useState<any>();
+    const [handWidth, setHandWidth] = useState<any>();
+    const [handHeight, setHandHeight] = useState<any>();
+
+    const oneHandGestureEvent = (event: PanGestureHandlerGestureEvent) => {
+        const { absoluteX } = event.nativeEvent;
+        if (absoluteX > 0 && absoluteX + handWidth < screenWidth) {
+            setOneHandTranslateX(absoluteX);
+
+            const value = oneFlatlistWidth / screenWidth
+            const handLocation = absoluteX * value
+
+            if (oneFlatListRef.current) {
+                oneFlatListRef.current.scrollToOffset({ offset: handLocation, animated: true });
+            }
+        }
+    }
+
+    const twoHandGestureEvent = (event: PanGestureHandlerGestureEvent) => {
+        const { absoluteX } = event.nativeEvent;
+        if (absoluteX > 0 && absoluteX + handWidth < screenWidth) {
+            setTwoHandTranslateX(absoluteX);
+
+            const value = twoFlatlistWidth / screenWidth
+            const handLocation = absoluteX * value
+
+            if (twoFlatListRef.current) {
+                twoFlatListRef.current.scrollToOffset({ offset: handLocation, animated: true });
+            }
+        }
+    }
+
 
     const screenLayout = (event: LayoutChangeEvent) => {
         setScreenWidth(event.nativeEvent.layout.width)
+    }
+
+    const handSize = (event: LayoutChangeEvent) => {
+        setHandWidth(event.nativeEvent.layout.width)
+        setHandHeight(event.nativeEvent.layout.height)
     }
 
 
@@ -475,13 +483,18 @@ const GameScreen = () => {
 
     const panWidth = (width * 0.95) / length
 
+
     const onHandlerStateChange = (event: any, item: any) => {
 
         if (event.nativeEvent.state === State.END) {
             dispatch(removePuzzlePiece(item))
 
             console.log("HOPPALA", item);
-            
+
+            let puzzleDistance = 2
+            puzzleDistance = length == 6 || length == 8 ? 2 : length == 10 || length == 12 ? 3 : 4
+
+            console.log("Puzzzzle distance", puzzleDistance);
 
             const number = Number(item.name)
 
@@ -512,9 +525,10 @@ const GameScreen = () => {
                 x: event.nativeEvent.absoluteX,
                 y: event.nativeEvent.absoluteY,
                 absoluteX: absoluteX + (((width * 0.95) / length) / 2),
-                absoluteY: absoluteY + (((width * 0.95) / length) * 1.5),
+                absoluteY: item?.whichPerson == 'one' ? absoluteY + (((width * 0.95) / length) * puzzleDistance) : absoluteY - (((width * 0.95) / length) * puzzleDistance),
                 enabled: true,
-                zIndex: true
+                zIndex: true,
+                whichPerson: item?.whichPerson
             }
 
             if (0 < number && number <= 10) {
@@ -1386,38 +1400,48 @@ const GameScreen = () => {
 
 
             {/* Hand */}
-            <View
-                style={styles.handBox}
-                onLayout={(event) => screenLayout(event)}
-            >
-                <PanGestureHandler
-                    onGestureEvent={(event) => twoHandGestureEvent(event)}
+            {
+                gamePerson == "2" &&
+                <View
+                    style={styles.handBox}
+                    onLayout={(event) => screenLayout(event)}
                 >
-                    <Ionicons
-                        style={[{
-                            transform: twoHandTranslateX && [
-                                { translateX: twoHandTranslateX },
-                                { translateY: -20 },
-                                { rotate: '180deg' }
-                            ],
-                            zIndex: 99,
-                            position: 'absolute',
-                        },
-                        styles.hand]}
-                        name="hand-right"
-                        size={35}
-                        color="blue"
-                    />
-                </PanGestureHandler>
-            </View>
+                    <PanGestureHandler
+                        onGestureEvent={(event) => twoHandGestureEvent(event)}
+                    >
+                        <Ionicons
+                            style={[{
+                                transform: twoHandTranslateX && handHeight && [
+                                    { translateX: twoHandTranslateX },
+                                    { translateY: (- (handHeight / 2)) },
+                                    { rotate: '180deg' }
+                                ],
+                                zIndex: 99,
+                                position: 'absolute',
+                            },
+                            styles.hand]}
+                            name="hand-right"
+                            size={40}
+                            color="blue"
+                        />
+                    </PanGestureHandler>
+                </View>
+            }
+
+
             {/* İKİNCİ KİŞİ */}
             <View style={styles.topBox}>
+                {
+                    gamePerson == "1" &&
+                    <Text>Hoopaplala</Text>
+                }
                 {
                     gamePerson == "2" &&
                     <>
                         <FlatList
                             data={gamePuzzlePieces.twoPersonPuzzlePieces}
                             ref={twoFlatListRef}
+                            onContentSizeChange={(w: number) => setTwoFlatlistWidth(w)}
                             renderItem={({ item, index }) => (
                                 <View
                                     style={styles.topPuzzleWrapper}
@@ -1446,6 +1470,8 @@ const GameScreen = () => {
             </View>
 
 
+
+
             {/* OYUN ALANI */}
             <View style={styles.mainBox} />
             <View
@@ -1456,12 +1482,14 @@ const GameScreen = () => {
             </View>
 
 
+
+
             {/* BİRİNCİ KİŞİ  */}
             <View style={styles.bottomBox}>
                 <FlatList
                     data={gamePuzzlePieces.onePersonPuzzlePieces}
                     ref={oneFlatListRef}
-                    onContentSizeChange={(w: number) => setFlatlistWidth(w)}
+                    onContentSizeChange={(w: number) => setOneFlatlistWidth(w)}
                     renderItem={({ item, index }) => (
                         <View
                             style={styles.bottomPuzzleWrapper}
@@ -1485,9 +1513,6 @@ const GameScreen = () => {
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={styles.pieceListContainer}
                 />
-
-
-
             </View>
 
 
@@ -1500,6 +1525,7 @@ const GameScreen = () => {
                     onGestureEvent={(event) => oneHandGestureEvent(event)}
                 >
                     <Ionicons
+                        onLayout={(event) => handSize(event)}
                         style={[{
                             transform: oneHandTranslateX && [
                                 { translateX: oneHandTranslateX },
@@ -1510,7 +1536,7 @@ const GameScreen = () => {
                         },
                         styles.hand]}
                         name="hand-right"
-                        size={35}
+                        size={40}
                         color="red"
                     />
                 </PanGestureHandler>

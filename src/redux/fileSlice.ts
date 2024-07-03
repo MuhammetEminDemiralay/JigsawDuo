@@ -261,15 +261,14 @@ export const getGamePuzzlePieces = createAsyncThunk('get/gamePuzzlePieces', asyn
       const uri = await getDownloadURL(downloadRef)
 
       if (gamePerson == '1') {
-        onePersonPieces.push({ uri: uri, name: name[0] })
+        onePersonPieces.push({ uri: uri, name: name[0], whichPerson: 'one' })
       }
       else if (gamePerson == '2' && onePersonPieces.length < halfPieces) {
-        onePersonPieces.push({ uri: uri, name: name[0] })
+        onePersonPieces.push({ uri: uri, name: name[0], whichPerson: 'one' })
       } else if (gamePerson == '2' && onePersonPieces.length >= halfPieces) {
-        twoPersonPieces.push({ uri: uri, name: name[0] })
+        twoPersonPieces.push({ uri: uri, name: name[0], whichPerson: 'two' })
       }
     }
-
 
     const puzzlePieces = {
       onePersonPuzzlePieces: onePersonPieces,
@@ -277,7 +276,6 @@ export const getGamePuzzlePieces = createAsyncThunk('get/gamePuzzlePieces', asyn
     }
 
     console.log("Puzzle parçaları", puzzlePieces);
-
 
     return puzzlePieces
 
@@ -410,8 +408,9 @@ export const fileSlice = createSlice({
     },
     //  iKİ KİŞİLİK DURUM KONTROLÜ
     removePuzzlePiece: (state, action) => {
-      // state.gamePuzzlePieces = state.gamePuzzlePieces?.onePersonPuzzlePieces?.filter((piece: any) => piece.uri != action.payload.uri)
-      // state.gamePuzzlePieces = state.gamePuzzlePieces?.twoPersonPuzzlePieces?.filter((piece: any) => piece.uri != action.payload.uri)
+      const onePersonPuzzlePieces = state.gamePuzzlePieces?.onePersonPuzzlePieces?.filter((piece: any) => piece.uri != action.payload.uri)
+      const twoPersonPuzzlePieces = state.gamePuzzlePieces?.twoPersonPuzzlePieces?.filter((piece: any) => piece.uri != action.payload.uri)
+      state.gamePuzzlePieces = { onePersonPuzzlePieces: onePersonPuzzlePieces, twoPersonPuzzlePieces: twoPersonPuzzlePieces }
     },
     setLength: (state, action) => {
       state.length = action.payload
@@ -419,8 +418,6 @@ export const fileSlice = createSlice({
     setArenaStartPosition: (state, action) => {
       state.startPosition = action.payload;
     }
-
-
 
   },
   extraReducers: (builder) => {

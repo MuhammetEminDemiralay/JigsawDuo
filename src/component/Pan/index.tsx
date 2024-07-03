@@ -9,9 +9,16 @@ const Pan = ({ state, setState }: any) => {
 
     const { length, startPosition, gameOption } = useSelector((state: any) => state.file)
 
+    let puzzleDistance = 2
     const startHandleGesture = (event: PanGestureHandlerGestureEvent) => {
-        const { absoluteX, absoluteY } = event.nativeEvent
 
+        console.log("Pandaki", state);
+        console.log("Pandaki whichPerson", state.whichPerson);
+
+
+
+        const { absoluteX, absoluteY } = event.nativeEvent
+        puzzleDistance = length == 6 || length == 8 ? 1.5 : length == 10 || length == 12 ? 2.5 : 3.5
 
         if ((state.absoluteX - 10) < absoluteX && absoluteX < (state.absoluteX + 10) && (state.absoluteY - 10) < absoluteY && absoluteY < (state.absoluteY + 10)) {
             setState({
@@ -22,7 +29,8 @@ const Pan = ({ state, setState }: any) => {
                 absoluteX: state.absoluteX,
                 absoluteY: state.absoluteY,
                 enabled: false,
-                zIndex: false
+                zIndex: false,
+                whichPerson: state.whichPerson
             })
         } else {
             setState({
@@ -33,7 +41,8 @@ const Pan = ({ state, setState }: any) => {
                 absoluteX: state.absoluteX,
                 absoluteY: state.absoluteY,
                 enabled: true,
-                zIndex: true
+                zIndex: true,
+                whichPerson: state.whichPerson
             })
         }
     }
@@ -55,9 +64,9 @@ const Pan = ({ state, setState }: any) => {
                             height: (width * 0.95) / length,
                             position: 'absolute',
                             zIndex: state.zIndex ? 2 : 1,
-                            transform: state.x && state.y && [
+                            transform: state.x && state.y && puzzleDistance && [
                                 { translateX: state.x - (((width * 0.95) / length) / 2) },
-                                { translateY: state.y - (((width * 0.95) / length) * 1.5) }
+                                { translateY: state?.whichPerson == 'one' ? state.y - (((width * 0.95) / length) * puzzleDistance) : state.y + (((width * 0.95) / length) * puzzleDistance) }
                             ],
                             resizeMode: 'cover',
                         }}

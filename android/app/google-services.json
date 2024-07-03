@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "747666038957",
+    "project_id": "jigsawduo-cc021",
+    "storage_bucket": "jigsawduo-cc021.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:747666038957:android:f3e7d6ab4fb74508d46624",
+        "android_client_info": {
+          "package_name": "com.anonymous.JigsawDuo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAehs-jt1eZxXrbb0LiNOq2oO68C_1F3MA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
