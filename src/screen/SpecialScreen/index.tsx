@@ -4,6 +4,7 @@ import { styles } from './styles'
 import { useDispatch, useSelector } from 'react-redux'
 import { getPuzzlesBySpecial } from '../../redux/fileSlice'
 import Modal from '../../component/Modal/modal'
+import { LinearGradient } from 'expo-linear-gradient'
 
 const SpecialScreen = () => {
 
@@ -21,14 +22,31 @@ const SpecialScreen = () => {
 
 
   return (
-    <View style={styles.mainContainer}>
+    <View
+      style={styles.mainContainer}>
       {
         !visible ?
           <FlatList
             data={speacialPuzzle}
+            ListHeaderComponent={() => (
+              <View
+                style={styles.titleTopBox}
+              >
+                <View style={styles.titleBottomBox}>
+                  <Text style={styles.titleText}>Özel</Text>
+                </View>
+              </View>
+            )}
             renderItem={({ item, index }) => (
               <Pressable
-                style={styles.box}
+                style={({ pressed }) => [
+                  {
+                    transform: [
+                      { scale: pressed ? 0.9 : 1 }
+                    ],
+                  }
+                  , styles.box
+                ]}
                 key={index}
                 onPress={() => {
                   setVisible(true)

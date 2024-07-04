@@ -3,6 +3,7 @@ import React from 'react'
 import { AdminScreen, CategoryScreen, DailyScreen, HomeScreen, MyPuzzleScreen, SpecialScreen } from '../screen';
 import { MaterialIcons, Entypo, FontAwesome5, MaterialCommunityIcons, FontAwesome, FontAwesome6 } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
+import { useSelector } from 'react-redux';
 
 
 const { width, height } = Dimensions.get("window")
@@ -10,7 +11,7 @@ const { width, height } = Dimensions.get("window")
 const UserStack = () => {
 
     const Stack = createBottomTabNavigator();
-    const isAdmin = true;
+    const { uid } = useSelector((state: any) => state.auth)
 
     return (
         <Stack.Navigator
@@ -66,7 +67,7 @@ const UserStack = () => {
                 }}
             />
             {
-                isAdmin &&
+                uid == 'nN21vUxEIcMuHXtY3NHXPW3TaCx1' &&
                 <Stack.Screen
                     name='admin'
                     component={AdminScreen}
@@ -75,7 +76,7 @@ const UserStack = () => {
                             <MaterialIcons name="admin-panel-settings" size={36} color="black" />
                         )
                     }}
-                />
+                /> 
             }
         </Stack.Navigator>
     )

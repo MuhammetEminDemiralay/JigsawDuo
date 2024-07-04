@@ -108,7 +108,7 @@ const MainScreen = () => {
 
       renderItem={({ item, index }) => (
         <Pressable
-          onPress={() => navigation.navigate(`${option}`, { category: item, puzzleType: puzzleType })}
+          onPress={() => navigation.navigate(`${option}`, { category: item.title, puzzleType: puzzleType })}
           style={({ pressed }) => [
             {
               backgroundColor: pressed ? '#ccc5b9' : '#333533'
@@ -116,7 +116,7 @@ const MainScreen = () => {
             , styles.btn
           ]} key={index}
         >
-          <Text style={styles.text}>{item}</Text>
+          <Text style={styles.text}>{item.title}</Text>
         </Pressable>
       )}
       contentContainerStyle={styles.container}

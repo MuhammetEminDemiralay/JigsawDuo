@@ -16,54 +16,53 @@ export const styles = StyleSheet.create({
     topBox: {
         width: width * 1,
         height: height * 0.075,
-        backgroundColor: 'red',
         position: 'relative',
         flexDirection: 'row',
         alignItems: 'center'
     },
     closeBtn: {
         position: 'absolute',
-        right: 20,
+        right: 15,
     },
+    box: {
 
+    },
     imageBox: {
         width: width * 0.95,
         height: width * 0.95,
         marginVertical: width * 0.025,
+        backgroundColor: '#212529',
+        borderRadius: 15
     },
     image: {
-        width: '100%',
-        height: '100%',
-        borderRadius: 10,
-        resizeMode: 'cover'
+        width: '97%',
+        height: '97%',
+        resizeMode: 'cover',
+        borderTopLeftRadius: 10,
+        borderBottomRightRadius: 10
     },
-
     optionBox: {
         width: width * 0.95,
         height: (height * 1) - ((width * 0.95) + (width * 0.05) + (height * 0.075)),
     },
-
     personBox: {
         width: '100%',
-        height: '25%',
-        borderWidth: 0.5,
+        height: '30%',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        columnGap: 10
+        columnGap: 20
     },
     personBtn: {
-        width: 50,
-        height: 50,
+        width: 55,
+        height: 55,
         textAlign: 'center',
         verticalAlign: 'middle',
-        borderRadius: 50,
-        elevation: 5
+        borderRadius: 10,
     },
     difficultBox: {
         width: '100%',
-        height: '25%',
-        borderWidth: 0.5,
+        height: '30%',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -83,58 +82,21 @@ export const styles = StyleSheet.create({
         position: 'absolute',
         fontSize: 12
     },
-
-
-    pieceBox: {
-        width: '100%',
-        height: '25%',
-        borderWidth: 0.5,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    pieceWrapper: {
-        borderWidth: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        width : 75
-    },
-    pieceList: {
-
-    },
-    pieceText: {
-
-    },
-
-
-   
     startBox: {
         width: '100%',
-        height: '25%',
-        borderWidth: 0.5,
+        height: '30%',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     startBtnBox: {
-        width: width * 0.7,
+        width: '100%',
         height: '60%',
-        borderRadius: 6,
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'skyblue',
-        elevation: 2
     },
     startBtnText: {
         fontSize: 20,
         fontWeight: '500',
     }
-
-
-    // kutu : {
-    //     width : (width * 0.95)/15,
-    //     height : (width * 0.95)/15,
-    //     borderWidth : 0.2 
-    // },
-    // text : {
-    //     fontSize : 8
-    // }
 })

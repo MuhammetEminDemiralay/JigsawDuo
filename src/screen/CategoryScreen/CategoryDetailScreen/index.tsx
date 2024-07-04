@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getPuzzlesByCategory, puzzleCategory } from '../../../redux/fileSlice';
 import Modal from '../../../component/Modal/modal';
 import { styles } from './style';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const CategoryDetailScreen = () => {
 
@@ -16,10 +17,10 @@ const CategoryDetailScreen = () => {
     const [data, setData] = useState<any>();
 
     useEffect(() => {
-
         dispatch(puzzleCategory(params))
         dispatch(getPuzzlesByCategory({ category: params, puzzleType: null }))
     }, [params])
+
 
     useEffect(() => {
         cacheDownloadData.forEach((item: any) => {
@@ -33,15 +34,33 @@ const CategoryDetailScreen = () => {
 
 
     return (
-        <View style={styles.mainContainer}>
+        <View
+            style={styles.mainContainer}
+        >
 
             {
                 !visible ?
                     <FlatList
                         data={data}
+                        ListHeaderComponent={() => (
+                            <View
+                                style={styles.titleTopBox}
+                            >
+                                <View style={styles.titleBottomBox}>
+                                    <Text style={styles.titleText}>{category}</Text>
+                                </View>
+                            </View>
+                        )}
                         renderItem={({ item, index }) => (
                             <Pressable
-                                style={styles.box}
+                                style={({ pressed }) => [
+                                    {
+                                        transform: [
+                                            { scale: pressed ? 0.9 : 1 }
+                                        ],
+                                    }
+                                    , styles.box
+                                ]}
                                 key={index}
                                 onPress={() => {
                                     setVisible(true)

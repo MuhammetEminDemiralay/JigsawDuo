@@ -229,6 +229,8 @@ export const getAllPuzzles = createAsyncThunk('getAll/puzzles', async () => {
 
     sortedData.reverse()
 
+    console.log("Sıralanmış veri",sortedData);
+    
 
 
     return sortedData

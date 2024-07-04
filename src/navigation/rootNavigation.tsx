@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 
 const RootNavigation = () => {
 
-    const isAuth = true;
+    const { isAuth } = useSelector((state: any) => state.auth)
     const { gameMode } = useSelector((state: any) => state.file)
 
     return (

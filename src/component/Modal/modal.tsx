@@ -5,15 +5,14 @@ import { AntDesign, Entypo, Ionicons, MaterialCommunityIcons, FontAwesome6 } fro
 import { styles } from './styles';
 import { useDispatch } from 'react-redux';
 import { setGameMode, setGameOption, setGamePerson } from '../../redux/fileSlice';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const Modal = ({ isVisible, setVisible, item }: any) => {
 
     const difficultData = ['36', '64', '100', '144', '225', '400']
-    const pieceData = ['classic', 'square', 'stick']
 
     const [personOption, setPersonOption] = useState<string>('1');
     const [difficultOption, setDifficultOption] = useState('36')
-    const [piece, setPiece] = useState('classic')
     const dispatch: any = useDispatch();
 
 
@@ -24,8 +23,6 @@ const Modal = ({ isVisible, setVisible, item }: any) => {
         dispatch(setGameMode(true))
     }
 
-
-
     return (
         <ReactNativeModal
             isVisible={isVisible}
@@ -35,13 +32,15 @@ const Modal = ({ isVisible, setVisible, item }: any) => {
             animationIn={'jello'}
         >
             {/* Üst kısım */}
-            <View style={styles.modalBox}>
+            <LinearGradient style={styles.modalBox}
+                colors={["#96ffc5", "#0086ff", "#00fff3"]}
+            >
                 <View style={styles.topBox}>
                     <AntDesign
                         style={styles.closeBtn}
                         name="closecircle"
                         size={30}
-                        color="#fff"
+                        color="#000814"
                         onPress={() => {
                             setVisible(false);
                         }}
@@ -58,16 +57,31 @@ const Modal = ({ isVisible, setVisible, item }: any) => {
 
                     {/* Tek-İki kişilik */}
                     <View style={styles.personBox}>
-                        <Entypo
-                            style={[{ backgroundColor: personOption == '1' ? 'orange' : '#fff' }, styles.personBtn]}
-                            name="user" size={24} color="black"
-                            onPress={() => setPersonOption('1')}
-                        />
-                        <Entypo
-                            style={[{ backgroundColor: personOption == '2' ? 'orange' : '#fff' }, styles.personBtn]}
-                            name="users" size={24} color="black"
-                            onPress={() => setPersonOption("2")}
-                        />
+                            <Entypo
+                                style={[{
+                                    backgroundColor: personOption == '1' ? '#ef233c' : '#fff',
+                                    transform: personOption == '1' ?
+                                        [{ scale: 1.25 }]
+                                        : [{ scaleX: 1 }]
+                                },
+                                styles.personBtn
+                                ]}
+                                name="user" size={30}
+                                color={personOption == '1' ? '#fff' : '#000814'}
+                                onPress={() => setPersonOption('1')}
+                            />
+                            <Entypo
+                                style={[{
+                                    backgroundColor: personOption == '2' ? '#ef233c' : '#fff',
+                                    transform: personOption == '2' ?
+                                        [{ scale: 1.25 }]
+                                        : [{ scaleX: 1 }]
+                                },
+                                styles.personBtn]}
+                                name="users" size={30}
+                                color={personOption == '2' ? '#fff' : '#000814'}
+                                onPress={() => setPersonOption("2")}
+                            />
                     </View>
 
                     {/* Zorluk seviyesi */}
@@ -91,42 +105,6 @@ const Modal = ({ isVisible, setVisible, item }: any) => {
                         />
                     </View>
 
-                    <View style={styles.pieceBox}>
-                        <FlatList
-                            data={pieceData}
-                            renderItem={({ item, index }) => (
-                                <Pressable
-                                    style={[{ backgroundColor: piece == item ? 'red' : 'skyblue' }, styles.pieceWrapper]}
-                                    onPress={() => setPiece(item)}
-                                    key={index}
-                                >
-                                    <Text>{item}</Text>
-                                    {
-                                        item == 'classic' &&
-                                        <MaterialCommunityIcons
-                                            name="puzzle-outline" size={28} color="black"
-                                        />
-                                    }
-                                    {
-                                        item == 'square' &&
-                                        <FontAwesome6
-                                            name="square" size={24} color="black"
-
-                                        />
-                                    }
-                                    {
-                                        item == 'stick' &&
-                                        <AntDesign
-                                            name="minus" size={24} color="black"
-                                        />
-                                    }
-                                </Pressable>
-                            )}
-                            horizontal
-                            contentContainerStyle={styles.pieceList}
-                        />
-                    </View>
-
                     <View style={styles.startBox}>
                         <Pressable onPress={() => startGame()} style={styles.startBtnBox}>
                             <Text style={styles.startBtnText}>Start</Text>
@@ -134,7 +112,7 @@ const Modal = ({ isVisible, setVisible, item }: any) => {
                     </View>
                 </View>
 
-            </View>
+            </LinearGradient>
         </ReactNativeModal>
     )
 }
