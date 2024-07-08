@@ -95,10 +95,8 @@ export const getPuzzlesByCategory = createAsyncThunk('get/puzzlesByCategory', as
 })
 
 
-export const getPuzzlesBySpecial = createAsyncThunk('get/puzzlesSpeacial', async () => {
+export const getPuzzlesBySpecial = createAsyncThunk('get/puzzlesSpeacial', async (data: null, { dispatch }) => {
   try {
-
-    let datas: any[] = []
 
     const categoryRef = ref(storage, `özel`)
     const puzzle = await list(categoryRef)
@@ -118,22 +116,20 @@ export const getPuzzlesBySpecial = createAsyncThunk('get/puzzlesSpeacial', async
           const metaData = await getMetadata(downloadRef);
           const docCreatedTime = metaData.timeCreated;
           const downloadData = await getDownloadURL(downloadRef)
-          datas.push({ id: puzzleId, downloadData: downloadData, time: docCreatedTime, fullPath: fullPath })
+          dispatch(getPuzzlesBySpecialImage({ id: puzzleId, downloadData: downloadData, time: docCreatedTime, fullPath: fullPath }))
         }
       }
     }
 
-    return datas
+    return null
 
   } catch (error) {
     throw error
   }
 })
 
-export const getPuzzlesByDaily = createAsyncThunk('get/puzzlesDaily', async () => {
+export const getPuzzlesByDaily = createAsyncThunk('get/puzzlesDaily', async (data: null, { dispatch }) => {
   try {
-
-    let datas: any[] = []
 
     const categoryRef = ref(storage, `günlük`)
     const puzzle = await list(categoryRef)
@@ -153,12 +149,13 @@ export const getPuzzlesByDaily = createAsyncThunk('get/puzzlesDaily', async () =
           const metaData = await getMetadata(downloadRef);
           const docCreatedTime = metaData.timeCreated;
           const downloadData = await getDownloadURL(downloadRef)
-          datas.push({ id: puzzleId, downloadData: downloadData, time: docCreatedTime, fullPath: fullPath })
+
+          dispatch(getPuzzlesByDailyImage({ id: puzzleId, downloadData: downloadData, time: docCreatedTime, fullPath: fullPath }))
         }
       }
     }
 
-    return datas
+    return null
 
   } catch (error) {
     throw error
@@ -192,48 +189,40 @@ export const getPuzzleByPuzzleId = createAsyncThunk('get/puzzleByPuzzleId', asyn
 })
 
 
-export const getAllPuzzles = createAsyncThunk('getAll/puzzles', async () => {
+export const getAllPuzzles = createAsyncThunk('getAll/puzzles', async (data: null, { dispatch }) => {
   try {
 
-    let finalyData: any[] = []
-    const puzzleType: any = ['file', 'genel', 'özel', 'günlük']
 
-    for (let type of puzzleType) {
-      const docRef = ref(storage, `${type}`);
+    const docRef = ref(storage, `genel`);
+    const datas = await list(docRef);
+
+    for (let data of datas.prefixes) {
+      const docRef = ref(storage, `${data.fullPath}`)
       const datas = await list(docRef);
 
       for (let data of datas.prefixes) {
-        const docRef = ref(storage, `${data.fullPath}`)
-        const datas = await list(docRef);
+        const puzzleRef = ref(storage, `${data.fullPath}/main`)
+        const puzzleData = await list(puzzleRef)
 
-        for (let data of datas.prefixes) {
-          const puzzleRef = ref(storage, `${data.fullPath}/main`)
-          const puzzleData = await list(puzzleRef)
+        let puzzleId = data.name;
+        let fullPath = data.fullPath
 
-          let puzzleId = data.name;
-          let fullPath = data.fullPath
 
-          for (let data of puzzleData.items) {
-            const downloadRef = ref(storage, `${data.fullPath}`)
-            const metaData = await getMetadata(downloadRef);
-            const docCreatedTime = metaData.timeCreated;
-            const downloadData = await getDownloadURL(downloadRef)
 
-            finalyData.push({ id: puzzleId, downloadData: downloadData, time: docCreatedTime, fullPath: fullPath })
-          }
+        for (let data of puzzleData.items) {
+          const downloadRef = ref(storage, `${data.fullPath}`)
+          const metaData = await getMetadata(downloadRef);
+          const docCreatedTime = metaData.timeCreated;
+          const downloadData = await getDownloadURL(downloadRef)
+
+          dispatch(getAllPuzzlesImage({ id: puzzleId, downloadData: downloadData, time: docCreatedTime, fullPath: fullPath }))
         }
       }
     }
 
-    const sortedData = finalyData.sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
+    // const sortedData = finalyData.sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
 
-    sortedData.reverse()
-
-    console.log("Sıralanmış veri",sortedData);
-    
-
-
-    return sortedData
+    return null
 
   } catch (error) {
 
@@ -241,7 +230,7 @@ export const getAllPuzzles = createAsyncThunk('getAll/puzzles', async () => {
 })
 
 
-export const getGamePuzzlePieces = createAsyncThunk('get/gamePuzzlePieces', async (data: null, { getState }) => {
+export const getGamePuzzlePieces = createAsyncThunk('get/gamePuzzlePieces', async (data: null, { getState, dispatch }) => {
   try {
 
     const state: any = getState()
@@ -255,6 +244,9 @@ export const getGamePuzzlePieces = createAsyncThunk('get/gamePuzzlePieces', asyn
 
     let onePersonPieces: any[] = [];
     let twoPersonPieces: any[] = [];
+
+
+    dispatch(setTotalPieces(puzzlePiece.items.length))
 
     for (let piece of puzzlePiece.items) {
 
@@ -308,7 +300,7 @@ type Model = {
 
   downloadData?: any[],
   puzzlePiece?: any[],
-  allPuzzlesImage?: any[],
+  allPuzzlesImage: any[],
   cacheDownloadData: any[],
   speacialPuzzle: any[],
   dailyPuzzle: any[],
@@ -319,7 +311,11 @@ type Model = {
   gamePuzzlePieces?: any,
   alonePiece: any[],
   length: number,
-  startPosition: any
+  startPosition: any,
+  loadingGame: boolean,
+  completedDatas: any[],
+  totalPuzzleSize: any,
+  puzzleİsComplete: boolean
 }
 
 const initialState: Model = {
@@ -351,7 +347,11 @@ const initialState: Model = {
   gamePuzzlePieces: {},
   alonePiece: [],
   length: 0,
-  startPosition: {}
+  startPosition: {},
+  loadingGame: true,
+  completedDatas: [],
+  totalPuzzleSize: 0,
+  puzzleİsComplete: false
 }
 
 export const fileSlice = createSlice({
@@ -419,8 +419,32 @@ export const fileSlice = createSlice({
     },
     setArenaStartPosition: (state, action) => {
       state.startPosition = action.payload;
-    }
+    },
 
+    getAllPuzzlesImage: (state, action) => {
+      state.allPuzzlesImage = [...state.allPuzzlesImage, action.payload]
+    },
+    getPuzzlesByDailyImage: (state, action) => {
+      state.dailyPuzzle = [...state.dailyPuzzle, action.payload]
+    },
+    getPuzzlesBySpecialImage: (state, action) => {
+      state.speacialPuzzle = [...state.speacialPuzzle, action.payload]
+    },
+    nullGamePuzzlePieces: (state, action) => {
+      state.gamePuzzlePieces = [];
+    },
+    setCompletedDatas: (state, action) => {
+      state.completedDatas = [...state.completedDatas, action.payload]
+      if (state.totalPuzzleSize && state.totalPuzzleSize == state.completedDatas.length) {
+        state.puzzleİsComplete = true;
+      }
+    },
+    setTotalPieces: (state, action) => {
+      state.totalPuzzleSize = action.payload
+    },
+    setPuzzleComplete: (state, action) => {
+      state.puzzleİsComplete = false;
+    }
   },
   extraReducers: (builder) => {
 
@@ -449,18 +473,17 @@ export const fileSlice = createSlice({
 
       }).
       addCase(getAllPuzzles.fulfilled, (state, action) => {
-        state.allPuzzlesImage = action.payload;
+        // state.allPuzzlesImage = action.payload;
       }).
       addCase(getAllPuzzles.rejected, (state, action) => {
 
       }).
 
-
       addCase(getPuzzlesBySpecial.pending, (state, action) => {
 
       }).
       addCase(getPuzzlesBySpecial.fulfilled, (state, action) => {
-        state.speacialPuzzle = action.payload;
+        // state.speacialPuzzle = action.payload;
       }).
       addCase(getPuzzlesBySpecial.rejected, (state, action) => {
 
@@ -470,7 +493,7 @@ export const fileSlice = createSlice({
 
       }).
       addCase(getPuzzlesByDaily.fulfilled, (state, action) => {
-        state.dailyPuzzle = action.payload;
+        // state.dailyPuzzle = action.payload;
       }).
       addCase(getPuzzlesByDaily.rejected, (state, action) => {
 
@@ -478,13 +501,14 @@ export const fileSlice = createSlice({
 
 
       addCase(getGamePuzzlePieces.pending, (state, action) => {
-
+        state.loadingGame = true;
       }).
       addCase(getGamePuzzlePieces.fulfilled, (state, action) => {
         state.gamePuzzlePieces = action.payload;
+        state.loadingGame = false;
       }).
       addCase(getGamePuzzlePieces.rejected, (state, action) => {
-
+        state.loadingGame = true;
       })
 
   }
@@ -493,4 +517,4 @@ export const fileSlice = createSlice({
 
 
 export default fileSlice.reducer
-export const { setArenaStartPosition, setLength, removePuzzlePiece, setGameMode, setGameOption, setGamePerson, main0, one36, two64, three100, four144, five225, six400, puzzleCategory, setDownloadData } = fileSlice.actions
+export const { setPuzzleComplete, setTotalPieces, setCompletedDatas, nullGamePuzzlePieces, getAllPuzzlesImage, getPuzzlesByDailyImage, getPuzzlesBySpecialImage, setArenaStartPosition, setLength, removePuzzlePiece, setGameMode, setGameOption, setGamePerson, main0, one36, two64, three100, four144, five225, six400, puzzleCategory, setDownloadData } = fileSlice.actions

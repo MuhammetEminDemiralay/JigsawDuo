@@ -1,14 +1,18 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Text, View } from 'react-native'
 import { styles } from './styles'
 import { LinearGradient } from 'expo-linear-gradient'
 import { GoogleSigninButton } from '@react-native-google-signin/google-signin'
 import { useDispatch } from 'react-redux'
-import { googleSignin } from '../../redux/authSlice'
+import { autoLogin, googleSignin } from '../../redux/authSlice'
 
 const LoginScreen = () => {
 
   const dispatch: any = useDispatch();
+
+  useEffect(() => {
+    dispatch(autoLogin())
+  }, [])
 
   return (
     <LinearGradient
@@ -18,7 +22,6 @@ const LoginScreen = () => {
         style={styles.signingBtn}
         size={GoogleSigninButton.Size.Standard}
         onPress={() => dispatch(googleSignin())}
-
       />
     </LinearGradient>
   )

@@ -4,13 +4,20 @@ export const styles = StyleSheet.create({
     container: {
         width: '100%',
         height: '100%',
-        backgroundColor: 'yellow',
+        backgroundColor: '#00a6fb',
         alignItems: 'center',
         justifyContent: 'center'
     },
-    text: {
-        fontSize: 25,
+    btnBox: {
+        width: '80%',
+        height: 45,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+        elevation: 2
+    },
+    btnText: {
+        fontSize: 20,
         fontWeight: '500',
-        color: 'black'
     }
 })

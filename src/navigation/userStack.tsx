@@ -1,8 +1,8 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { AdminScreen, CategoryScreen, DailyScreen, HomeScreen, MyPuzzleScreen, SpecialScreen } from '../screen';
 import { MaterialIcons, Entypo, FontAwesome5, MaterialCommunityIcons, FontAwesome, FontAwesome6 } from '@expo/vector-icons';
-import { Dimensions } from 'react-native';
+import { Dimensions, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 
 
@@ -12,6 +12,14 @@ const UserStack = () => {
 
     const Stack = createBottomTabNavigator();
     const { uid } = useSelector((state: any) => state.auth)
+    const [date, setDate] = useState<any>();
+
+    useEffect(() => {
+        const date = new Date().getDate();
+        setDate(date);
+    }, [])
+
+
 
     return (
         <Stack.Navigator
@@ -21,6 +29,7 @@ const UserStack = () => {
                 tabBarStyle: {
                     height: height * 0.075,
                 },
+                tabBarActiveBackgroundColor: '#ff9500'
             }}
         >
             <Stack.Screen
@@ -28,7 +37,7 @@ const UserStack = () => {
                 component={HomeScreen}
                 options={{
                     tabBarIcon: ({ }) => (
-                        <Entypo name="home" size={30} color="black" />
+                        <Entypo name="home" size={32} color="black" />
                     )
                 }}
             />
@@ -37,7 +46,7 @@ const UserStack = () => {
                 component={SpecialScreen}
                 options={{
                     tabBarIcon: () => (
-                        <MaterialCommunityIcons name="puzzle-star" size={30} color="black" />
+                        <MaterialCommunityIcons name="puzzle-star" size={32} color="black" />
                     )
                 }}
             />
@@ -46,7 +55,10 @@ const UserStack = () => {
                 component={DailyScreen}
                 options={{
                     tabBarIcon: ({ }) => (
-                        <FontAwesome name="calendar-o" size={30} color="black" />
+                        <View style={{ padding: 4 }}>
+                            <FontAwesome name="calendar-o" size={35} color="black" />
+                            <Text style={{ position: 'absolute', top: '42%', left: '22%', fontWeight: '700', fontSize: 16 }}>{date}</Text>
+                        </View>
                     )
                 }}
             />
@@ -55,17 +67,21 @@ const UserStack = () => {
                 component={CategoryScreen}
                 options={{
                     tabBarIcon: ({ }) => (
-                        <FontAwesome6 name="layer-group" size={30} color="black" />)
+                        <FontAwesome6 name="layer-group" size={32} color="black" />)
                 }}
             />
-            <Stack.Screen
-                name='myPuzzle'
-                component={MyPuzzleScreen}
-                options={{
-                    tabBarIcon: ({ }) => (
-                        <FontAwesome5 name="user-alt" size={30} color="black" />)
-                }}
-            />
+            {
+                uid != 'nN21vUxEIcMuHXtY3NHXPW3TaCx1' &&
+                <Stack.Screen
+                    name='myPuzzle'
+                    component={MyPuzzleScreen}
+                    options={{
+                        tabBarIcon: () => (
+                            <FontAwesome name="user" size={32} color="black" />
+                        )
+                    }}
+                />
+            }
             {
                 uid == 'nN21vUxEIcMuHXtY3NHXPW3TaCx1' &&
                 <Stack.Screen
@@ -73,10 +89,10 @@ const UserStack = () => {
                     component={AdminScreen}
                     options={{
                         tabBarIcon: ({ }) => (
-                            <MaterialIcons name="admin-panel-settings" size={36} color="black" />
+                            <MaterialIcons name="admin-panel-settings" size={32} color="black" />
                         )
                     }}
-                /> 
+                />
             }
         </Stack.Navigator>
     )

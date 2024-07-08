@@ -17,7 +17,7 @@ const DailyScreen = () => {
 
 
   useEffect(() => {
-    dispatch(getPuzzlesByDaily())
+    dispatch(getPuzzlesByDaily(null))
   }, [])
 
 
@@ -47,7 +47,8 @@ const DailyScreen = () => {
                     ],
                   }
                   , styles.box
-                ]} key={index}
+                ]}
+                key={index}
                 onPress={() => {
                   setVisible(true)
                   setItem(item)

@@ -6,19 +6,19 @@ export const styles = StyleSheet.create({
     container: {
         width: '100%',
         height: height * 1,
-        backgroundColor: 'white',
+        backgroundColor: '#fdffff',
         position: 'relative'
     },
     topBox: {
         width: '100%',
-        minHeight: (height * 0.18) - 60,
-        maxHeight: (height * 0.18) - 60,
+        minHeight: (height * 0.17) - 60,
+        maxHeight: (height * 0.17) - 60,
     },
     mainBox: {
         width: '100%',
         minHeight: (height * 0.6),
         maxHeight: (height * 0.6),
-        backgroundColor: '#2a9d8f',
+        backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -28,12 +28,15 @@ export const styles = StyleSheet.create({
         backgroundColor: 'lightgray',
         position: 'absolute',
         top: (height * 0.5) - (width * 0.475),
-        left: width * 0.0275
+        left: width * 0.0275,
+        elevation: 5,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     bottomBox: {
         width: '100%',
-        minHeight: (height * 0.18) - 60,
-        maxHeight: (height * 0.18) - 60,
+        minHeight: (height * 0.17) - 60,
+        maxHeight: (height * 0.17) - 60,
     },
     topPuzzleWrapper: {
         paddingHorizontal: 5,
@@ -82,9 +85,28 @@ export const styles = StyleSheet.create({
     },
     handBox: {
         width: '100%',
-        height: width * 0.04,
-        backgroundColor: 'black',
+        height: width * 0.06,
+        justifyContent: 'center',
     },
     hand: {
+        width: width * 0.06,
+        height: width * 0.06,
+        borderRadius: 50,
+        borderWidth: 2,
+        borderColor: '#fff'
+    },
+    infoBox: {
+        position: 'absolute',
+        top: 5,
+        right: 5,
+        width: 30,
+        height: 30,
+        borderRadius: 50,
+    },
+    toggleBox: {
+        position: 'absolute',
+        right: 40,
+        top: 10,
     }
+
 })

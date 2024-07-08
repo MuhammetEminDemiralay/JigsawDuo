@@ -6,7 +6,7 @@ export const styles = StyleSheet.create({
     mainContainer: {
         width: '100%',
         height: '100%',
-        backgroundColor: '#ef233c',
+        backgroundColor: '#00a6fb',
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -19,9 +19,9 @@ export const styles = StyleSheet.create({
         marginTop: height * 0.05,
         marginBottom: height * 0.025,
         borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
+        borderTopRightRadius: 15,
         borderBottomRightRadius: 10,
-        borderBottomLeftRadius: 10,
+        borderBottomLeftRadius: 15,
         backgroundColor: '#fff',
         elevation: 10
     },

@@ -17,7 +17,7 @@ const HomeScreen = () => {
 
 
   useEffect(() => {
-    dispatch(getAllPuzzles())
+    dispatch(getAllPuzzles(null))
   }, [])
 
   return (

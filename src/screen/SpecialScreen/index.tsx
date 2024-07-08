@@ -17,7 +17,7 @@ const SpecialScreen = () => {
 
 
   useEffect(() => {
-    dispatch(getPuzzlesBySpecial())
+    dispatch(getPuzzlesBySpecial(null))
   }, [])
 
 

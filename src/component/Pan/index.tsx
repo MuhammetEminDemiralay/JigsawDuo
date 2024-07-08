@@ -1,24 +1,23 @@
 import React, { useState } from 'react'
 import { Dimensions, Image } from 'react-native'
 import { PanGestureHandler, PanGestureHandlerGestureEvent, State } from 'react-native-gesture-handler'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { setCompletedDatas } from '../../redux/fileSlice'
 
 const { width } = Dimensions.get("window")
 
 const Pan = ({ state, setState }: any) => {
 
-    const { length, startPosition, gameOption } = useSelector((state: any) => state.file)
-
+    const { length, completedDatas } = useSelector((state: any) => state.file)
     let puzzleDistance = 2
+    const dispatch: any = useDispatch();
+
+
     const startHandleGesture = (event: PanGestureHandlerGestureEvent) => {
 
-        console.log("Pandaki", state);
-        console.log("Pandaki whichPerson", state.whichPerson);
-
-
-
         const { absoluteX, absoluteY } = event.nativeEvent
-        puzzleDistance = length == 6 || length == 8 ? 1.5 : length == 10 || length == 12 ? 2.5 : 3.5
+        puzzleDistance = 2;
+
 
         if ((state.absoluteX - 10) < absoluteX && absoluteX < (state.absoluteX + 10) && (state.absoluteY - 10) < absoluteY && absoluteY < (state.absoluteY + 10)) {
             setState({
@@ -32,6 +31,11 @@ const Pan = ({ state, setState }: any) => {
                 zIndex: false,
                 whichPerson: state.whichPerson
             })
+            const checkData = completedDatas.find((item: any) => item == state.name)
+            if (checkData == null) {
+                dispatch(setCompletedDatas(state.name))
+            }
+
         } else {
             setState({
                 uri: state.uri,

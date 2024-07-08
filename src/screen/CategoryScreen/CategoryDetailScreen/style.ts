@@ -4,7 +4,7 @@ const { width, height } = Dimensions.get("window")
 
 export const styles = StyleSheet.create({
     mainContainer: {
-        backgroundColor: '#ef233c',
+        backgroundColor: '#00a6fb',
         width: '100%',
         height: '100%',
         alignItems: 'center',
@@ -22,9 +22,9 @@ export const styles = StyleSheet.create({
         marginTop: height * 0.05,
         marginBottom: height * 0.025,
         borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
+        borderTopRightRadius: 15,
         borderBottomRightRadius: 10,
-        borderBottomLeftRadius: 10,
+        borderBottomLeftRadius: 15,
         backgroundColor: '#fff',
         elevation: 10
     },
@@ -54,11 +54,12 @@ export const styles = StyleSheet.create({
         height: width * 0.425
     },
     imageBox: {
-        width: '95%',
-        height: '95%',
+        width: '97%',
+        height: '97%',
         borderWidth: 3,
         borderColor: '#fff',
         borderTopLeftRadius: 10,
-        borderBottomRightRadius: 5
+        borderBottomRightRadius: 5,
+        borderBottomLeftRadius: 5
     },
 }) 

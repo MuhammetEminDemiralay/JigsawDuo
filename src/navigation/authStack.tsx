@@ -6,7 +6,7 @@ const AuthStack = () => {
 
     const Stack = createNativeStackNavigator()
 
-    return (
+    return ( 
         <Stack.Navigator>
             <Stack.Screen
                 options={{ 

@@ -1,31 +1,58 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Button, Dimensions, FlatList, Image, LayoutChangeEvent, Text, View } from 'react-native'
+import { ActivityIndicator, Dimensions, FlatList, Image, LayoutChangeEvent, Pressable, Text, View, Platform } from 'react-native'
 import { styles } from './styles'
 import { useDispatch, useSelector } from 'react-redux';
-import { getGamePuzzlePieces, removePuzzlePiece, setArenaStartPosition, setGameMode, setLength, } from '../../redux/fileSlice';
+import { getGamePuzzlePieces, nullGamePuzzlePieces, removePuzzlePiece, setArenaStartPosition, setGameMode, setLength, } from '../../redux/fileSlice';
 import { GestureHandlerRootView, PanGestureHandler, PanGestureHandlerGestureEvent, State } from 'react-native-gesture-handler';
-import { Entypo, AntDesign, Ionicons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import Pan from '../../component/Pan';
+import { LinearGradient } from 'expo-linear-gradient';
+import { BannerAd, BannerAdSize, useForeground, InterstitialAd, AdEventType } from 'react-native-google-mobile-ads';
 
 
-const { width, height } = Dimensions.get("window")
+const { width } = Dimensions.get("window")
+
+const adUnitId = 'ca-app-pub-6544614784049955/7126972822';
+const interstitial = InterstitialAd.createForAdRequest(adUnitId, {
+    keywords: ['fashion', 'clothing'],
+});
 
 const GameScreen = () => {
 
-    const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]
     const dispatch: any = useDispatch();
-    const { gamePuzzlePieces, gameOption, gamePerson, length, startPosition } = useSelector((state: any) => state.file)
+    const { gamePuzzlePieces, puzzleİsComplete, gameOption, gamePerson, length, startPosition, loadingGame } = useSelector((state: any) => state.file)
 
     useEffect(() => {
         dispatch(getGamePuzzlePieces(null))
         const pieceCount = gameOption.split("/").pop();
         dispatch(setLength(Math.sqrt(pieceCount)));
-
     }, [])
 
-    const closeGame = () => {
-        dispatch(setGameMode(false))
-    }
+    const [loaded, setLoaded] = useState(false);
+
+    useEffect(() => {
+        const unsubscribe = interstitial.addAdEventListener(AdEventType.LOADED, () => {
+            setLoaded(true);
+        });
+        interstitial.load();
+        return unsubscribe;
+    }, []);
+
+    useEffect(() => {
+        if (loaded) {
+            interstitial.show();
+        }
+    }, [loaded]);
+
+
+
+    const bannerRef = useRef<BannerAd>(null);
+    const adUnitId = 'ca-app-pub-6544614784049955/3207274652';
+    useForeground(() => {
+        Platform.OS === 'android' && bannerRef.current?.load();
+    })
+
+
 
     const [oneHandTranslateX, setOneHandTranslateX] = useState<any>(5);
     const [twoHandTranslateX, setTwoHandTranslateX] = useState<any>(5);
@@ -79,42 +106,52 @@ const GameScreen = () => {
     }
 
 
-    const [state1, setState1] = useState<any>()
-    const [state2, setState2] = useState<any>()
-    const [state3, setState3] = useState<any>()
-    const [state4, setState4] = useState<any>()
-    const [state5, setState5] = useState<any>()
-    const [state6, setState6] = useState<any>()
-    const [state7, setState7] = useState<any>()
-    const [state8, setState8] = useState<any>()
-    const [state9, setState9] = useState<any>()
-    const [state10, setState10] = useState<any>()
-    const [state11, setState11] = useState<any>()
-    const [state12, setState12] = useState<any>()
-    const [state13, setState13] = useState<any>()
-    const [state14, setState14] = useState<any>()
-    const [state15, setState15] = useState<any>()
-    const [state16, setState16] = useState<any>()
-    const [state17, setState17] = useState<any>()
-    const [state18, setState18] = useState<any>()
-    const [state19, setState19] = useState<any>()
-    const [state20, setState20] = useState<any>()
-    const [state21, setState21] = useState<any>()
-    const [state22, setState22] = useState<any>()
-    const [state23, setState23] = useState<any>()
-    const [state24, setState24] = useState<any>()
-    const [state25, setState25] = useState<any>()
-    const [state26, setState26] = useState<any>()
-    const [state27, setState27] = useState<any>()
-    const [state28, setState28] = useState<any>()
-    const [state29, setState29] = useState<any>()
-    const [state30, setState30] = useState<any>()
-    const [state31, setState31] = useState<any>()
-    const [state32, setState32] = useState<any>()
-    const [state33, setState33] = useState<any>()
-    const [state34, setState34] = useState<any>()
-    const [state35, setState35] = useState<any>()
-    const [state36, setState36] = useState<any>()
+    const [toggle, setToggle] = useState<any>(false);
+    const setToggleVisibilty = () => {
+        toggle ? setToggle(false) : setToggle(true)
+    }
+
+    const closeGame = () => {
+        dispatch(setGameMode(false))
+        dispatch(nullGamePuzzlePieces(null))
+    }
+
+    const [state1, setState1] = useState<any>();
+    const [state2, setState2] = useState<any>();
+    const [state3, setState3] = useState<any>();
+    const [state4, setState4] = useState<any>();
+    const [state5, setState5] = useState<any>();
+    const [state6, setState6] = useState<any>();
+    const [state7, setState7] = useState<any>();
+    const [state8, setState8] = useState<any>();
+    const [state9, setState9] = useState<any>();
+    const [state10, setState10] = useState<any>();
+    const [state11, setState11] = useState<any>();
+    const [state12, setState12] = useState<any>();
+    const [state13, setState13] = useState<any>();
+    const [state14, setState14] = useState<any>();
+    const [state15, setState15] = useState<any>();
+    const [state16, setState16] = useState<any>();
+    const [state17, setState17] = useState<any>();
+    const [state18, setState18] = useState<any>();
+    const [state19, setState19] = useState<any>();
+    const [state20, setState20] = useState<any>();
+    const [state21, setState21] = useState<any>();
+    const [state22, setState22] = useState<any>();
+    const [state23, setState23] = useState<any>();
+    const [state24, setState24] = useState<any>();
+    const [state25, setState25] = useState<any>();
+    const [state26, setState26] = useState<any>();
+    const [state27, setState27] = useState<any>();
+    const [state28, setState28] = useState<any>();
+    const [state29, setState29] = useState<any>();
+    const [state30, setState30] = useState<any>();
+    const [state31, setState31] = useState<any>();
+    const [state32, setState32] = useState<any>();
+    const [state33, setState33] = useState<any>();
+    const [state34, setState34] = useState<any>();
+    const [state35, setState35] = useState<any>();
+    const [state36, setState36] = useState<any>();
     const [state37, setState37] = useState<any>();
     const [state38, setState38] = useState<any>();
     const [state39, setState39] = useState<any>();
@@ -489,10 +526,8 @@ const GameScreen = () => {
         if (event.nativeEvent.state === State.END) {
             dispatch(removePuzzlePiece(item))
 
-            console.log("HOPPALA", item);
 
             let puzzleDistance = 2
-            puzzleDistance = length == 6 || length == 8 ? 2 : length == 10 || length == 12 ? 3 : 4
 
             console.log("Puzzzzle distance", puzzleDistance);
 
@@ -983,7 +1018,10 @@ const GameScreen = () => {
 
     return (
 
+
         <GestureHandlerRootView style={styles.container}>
+
+
 
             {state1 && <Pan state={state1} setState={setState1} />}
             {state2 && <Pan state={state2} setState={setState2} />}
@@ -1392,49 +1430,38 @@ const GameScreen = () => {
 
             </View>
 
-            {/* <AntDesign
-                style={{ position: 'absolute', right: 20, top: 20 }}
-                name="closecircle" size={30} color="black"
-                onPress={closeGame}
-            /> */}
+
 
 
             {/* Hand */}
             {
                 gamePerson == "2" &&
-                <View
+                <LinearGradient
+                    colors={["#fff", "#fff", "red", "#fff", "#fff"]}
                     style={styles.handBox}
                     onLayout={(event) => screenLayout(event)}
                 >
                     <PanGestureHandler
                         onGestureEvent={(event) => twoHandGestureEvent(event)}
                     >
-                        <Ionicons
+                        <Pressable
                             style={[{
                                 transform: twoHandTranslateX && handHeight && [
                                     { translateX: twoHandTranslateX },
-                                    { translateY: (- (handHeight / 2)) },
-                                    { rotate: '180deg' }
                                 ],
                                 zIndex: 99,
                                 position: 'absolute',
+                                backgroundColor: 'red'
                             },
                             styles.hand]}
-                            name="hand-right"
-                            size={40}
-                            color="blue"
                         />
                     </PanGestureHandler>
-                </View>
+                </LinearGradient>
             }
 
 
             {/* İKİNCİ KİŞİ */}
             <View style={styles.topBox}>
-                {
-                    gamePerson == "1" &&
-                    <Text>Hoopaplala</Text>
-                }
                 {
                     gamePerson == "2" &&
                     <>
@@ -1473,11 +1500,37 @@ const GameScreen = () => {
 
 
             {/* OYUN ALANI */}
-            <View style={styles.mainBox} />
+            <View style={styles.mainBox} >
+                {
+                    toggle &&
+                    <AntDesign
+                        style={styles.toggleBox}
+                        name="closecircle" size={20} color="#fff"
+                        onPress={closeGame}
+                    />
+                }
+                <Pressable
+                    style={({ pressed }) => [
+                        {
+                            backgroundColor: pressed ? '#4361ee' : '#fff'
+                        },
+                        styles.infoBox
+                    ]}
+                    onPress={() => setToggleVisibilty()}
+                />
+            </View>
             <View
                 onLayout={(event) => handleLayout(event)}
                 style={styles.arena}
             >
+                {
+                    loadingGame &&
+                    <ActivityIndicator color="red" size={30} />
+                }
+                {
+                    puzzleİsComplete &&
+                    <Text style={{ fontSize: 30, fontWeight: '600', color: '#fff' }}>Tebrikler !!</Text>
+                }
 
             </View>
 
@@ -1517,33 +1570,31 @@ const GameScreen = () => {
 
 
             {/* Hand */}
-            <View
+            <LinearGradient
+                colors={["#fff", "#fff", "#00a6fb", "#fff", "#fff"]}
                 style={styles.handBox}
                 onLayout={(event) => screenLayout(event)}
             >
                 <PanGestureHandler
                     onGestureEvent={(event) => oneHandGestureEvent(event)}
                 >
-                    <Ionicons
+                    <Pressable
                         onLayout={(event) => handSize(event)}
                         style={[{
                             transform: oneHandTranslateX && [
                                 { translateX: oneHandTranslateX },
-                                { translateY: 0 }
                             ],
                             zIndex: 99,
                             position: 'absolute',
+                            backgroundColor: '#00a6fb'
                         },
                         styles.hand]}
-                        name="hand-right"
-                        size={40}
-                        color="red"
                     />
                 </PanGestureHandler>
-            </View>
+            </LinearGradient>
 
             <View style={styles.banner}>
-
+                <BannerAd ref={bannerRef} unitId={adUnitId} size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER} />
             </View>
 
         </GestureHandlerRootView >
