@@ -8,10 +8,10 @@ export const styles = StyleSheet.create({
         height: '100%',
         backgroundColor: '#00a6fb',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     container: {
-        paddingVertical: 25
+        marginBottom: 100
     },
     titleTopBox: {
         maxWidth: width * 0.95,
@@ -38,7 +38,7 @@ export const styles = StyleSheet.create({
     },
     titleText: {
         fontSize: 25,
-        fontWeight: '500',
+        fontWeight: '700',
         color: '#fff',
         letterSpacing: 1
     },
@@ -76,5 +76,25 @@ export const styles = StyleSheet.create({
         transform: [
             { rotate: '45deg' }
         ]
+    },
+    btnBox: {
+        minWidth: '80%',
+        height: 45,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+        elevation: 2,
+        marginVertical : 30
+    },
+    btnText: {
+        fontSize: 20,
+        fontWeight: '500',
+    },
+    logoutText: {
+        fontSize: 25,
+        fontWeight: '700',
+        color: '#000814',
+        marginBottom: 20,
+        letterSpacing: 2
     }
 })

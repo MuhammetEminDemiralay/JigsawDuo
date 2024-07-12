@@ -107,6 +107,47 @@ export const styles = StyleSheet.create({
         position: 'absolute',
         right: 40,
         top: 10,
+    },
+    isComplete: {
+        zIndex: 100,
+        fontSize: 30,
+        fontWeight: '600',
+        color: '#ef233c'
+    },
+    modalContainer: {
+        padding: 0,
+        margin: 0,
+        minWidth: width * 1,
+        height: '100%',
+        backgroundColor: 'orange',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    finishBtn: {
+        width: '80%',
+        height: height * 0.07,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#00a6fb',
+        columnGap: 20,
+        borderWidth: 2,
+        borderColor: '#fff',
+        marginTop  : 30
+
+    },
+    finishText: {
+        color: '#fff',
+        fontWeight: '600',
+        fontSize: 22,
+    },
+    finishImage: {
+        width: width * 0.8,
+        height: width * 0.8,
+        resizeMode: 'cover',
+        borderWidth: 2,
+        borderColor: '#fff',
+        marginBottom : 30
     }
 
 })

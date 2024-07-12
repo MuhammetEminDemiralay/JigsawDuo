@@ -1,7 +1,7 @@
 package com.anonymous.JigsawDuo
-
+import android.os.Bundle; 
+import org.devio.rn.splashscreen.SplashScreen; 
 import android.os.Build
-import android.os.Bundle
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
@@ -19,6 +19,9 @@ class MainActivity : ReactActivity() {
     // This is required for expo-splash-screen.
     setTheme(R.style.AppTheme);
     super.onCreate(null)
+
+   SplashScreen.show(this)  // here   burada tanımla
+
   }
 
   /**
@@ -26,6 +29,7 @@ class MainActivity : ReactActivity() {
    * rendering of the component.
    */
   override fun getMainComponentName(): String = "main"
+
 
   /**
    * Returns the instance of the [ReactActivityDelegate]. We use [DefaultReactActivityDelegate]

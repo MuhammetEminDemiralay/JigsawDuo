@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import React, { useEffect, useState } from 'react'
-import { AdminScreen, CategoryScreen, DailyScreen, HomeScreen, MyPuzzleScreen, SpecialScreen } from '../screen';
+import { AdminScreen, CategoryScreen, DailyScreen, HomeScreen, SpecialScreen } from '../screen';
 import { MaterialIcons, Entypo, FontAwesome5, MaterialCommunityIcons, FontAwesome, FontAwesome6 } from '@expo/vector-icons';
 import { Dimensions, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -19,6 +19,7 @@ const UserStack = () => {
         setDate(date);
     }, [])
 
+    const [color, setColor] = useState<any>('home')
 
 
     return (
@@ -29,7 +30,7 @@ const UserStack = () => {
                 tabBarStyle: {
                     height: height * 0.075,
                 },
-                tabBarActiveBackgroundColor: '#ff9500'
+                tabBarActiveBackgroundColor: '#d81159',
             }}
         >
             <Stack.Screen
@@ -37,8 +38,16 @@ const UserStack = () => {
                 component={HomeScreen}
                 options={{
                     tabBarIcon: ({ }) => (
-                        <Entypo name="home" size={32} color="black" />
-                    )
+                        <Entypo name="home"
+                            size={32}
+                            color={color == 'home' ? '#fff' : 'black'}
+                        />
+                    ),
+                }}
+                listeners={{
+                    tabPress: () => {
+                        setColor('home')
+                    }
                 }}
             />
             <Stack.Screen
@@ -46,8 +55,15 @@ const UserStack = () => {
                 component={SpecialScreen}
                 options={{
                     tabBarIcon: () => (
-                        <MaterialCommunityIcons name="puzzle-star" size={32} color="black" />
+                        <MaterialCommunityIcons
+                            name="puzzle-star" size={32}
+                            color={color == 'special' ? '#fff' : 'black'} />
                     )
+                }}
+                listeners={{
+                    tabPress: () => {
+                        setColor('special')
+                    }
                 }}
             />
             <Stack.Screen
@@ -55,46 +71,103 @@ const UserStack = () => {
                 component={DailyScreen}
                 options={{
                     tabBarIcon: ({ }) => (
-                        <View style={{ padding: 4 }}>
-                            <FontAwesome name="calendar-o" size={35} color="black" />
-                            <Text style={{ position: 'absolute', top: '42%', left: '22%', fontWeight: '700', fontSize: 16 }}>{date}</Text>
+                        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                            <FontAwesome
+                                name="calendar-o" size={32}
+                                color={color == 'daily' ? '#fff' : 'black'}
+                            />
+                            <Text
+                                style={{ position: 'absolute', fontWeight: '700', fontSize: 16, top: '26%', color: color == 'daily' ? '#fff' : 'black' }}
+                            >
+                                {date}
+                            </Text>
                         </View>
                     )
                 }}
+                listeners={{
+                    tabPress: () => {
+                        setColor('daily')
+                    }
+                }}
             />
-            <Stack.Screen
+            < Stack.Screen
                 name='category'
                 component={CategoryScreen}
                 options={{
                     tabBarIcon: ({ }) => (
-                        <FontAwesome6 name="layer-group" size={32} color="black" />)
+                        <FontAwesome6
+                            name="layer-group" size={32}
+                            color={color == 'category' ? '#fff' : 'black'} />
+                    )
+                }}
+                listeners={{
+                    tabPress: () => {
+                        setColor('category')
+                    }
                 }}
             />
-            {
-                uid != 'nN21vUxEIcMuHXtY3NHXPW3TaCx1' &&
+            {/* {
+                uid != 'nN21vUxEIcMuHXtY3NHXPW3TaCx1' || uid != 'fSEdJYIHwWhezm0jfKHwjZWtLfD3' &&
                 <Stack.Screen
                     name='myPuzzle'
                     component={MyPuzzleScreen}
                     options={{
                         tabBarIcon: () => (
-                            <FontAwesome name="user" size={32} color="black" />
+                            <FontAwesome
+                                name="user" size={35}
+                                color={color == 'myPuzzle' ? '#fff' : 'black'}
+                            />
                         )
                     }}
+                    listeners={{
+                        tabPress: () => {
+                            setColor('myPuzzle')
+                        }
+                    }}
                 />
-            }
+            } */}
+
             {
                 uid == 'nN21vUxEIcMuHXtY3NHXPW3TaCx1' &&
-                <Stack.Screen
+                < Stack.Screen
                     name='admin'
                     component={AdminScreen}
                     options={{
                         tabBarIcon: ({ }) => (
-                            <MaterialIcons name="admin-panel-settings" size={32} color="black" />
+                            <MaterialIcons
+                                name="admin-panel-settings" size={35}
+                                color={color == 'admin' ? '#fff' : 'black'}
+                            />
                         )
+                    }}
+                    listeners={{
+                        tabPress: () => {
+                            setColor('admin')
+                        }
                     }}
                 />
             }
-        </Stack.Navigator>
+            {
+                uid == 'fSEdJYIHwWhezm0jfKHwjZWtLfD3' &&
+                < Stack.Screen
+                    name='admin'
+                    component={AdminScreen}
+                    options={{
+                        tabBarIcon: ({ }) => (
+                            <MaterialIcons
+                                name="admin-panel-settings" size={35}
+                                color={color == 'admin' ? '#fff' : 'black'}
+                            />
+                        )
+                    }}
+                    listeners={{
+                        tabPress: () => {
+                            setColor('admin')
+                        }
+                    }}
+                />
+            }
+        </Stack.Navigator >
     )
 }
 

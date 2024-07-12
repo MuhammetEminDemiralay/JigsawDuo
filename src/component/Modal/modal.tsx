@@ -4,7 +4,7 @@ import ReactNativeModal from 'react-native-modal'
 import { AntDesign, Entypo, Ionicons, MaterialCommunityIcons, FontAwesome6 } from '@expo/vector-icons';
 import { styles } from './styles';
 import { useDispatch } from 'react-redux';
-import { setGameMode, setGameOption, setGamePerson } from '../../redux/fileSlice';
+import { setGameMode, setGameOption, setGamePerson, setImage } from '../../redux/fileSlice';
 
 const Modal = ({ isVisible, setVisible, item }: any) => {
 
@@ -19,7 +19,8 @@ const Modal = ({ isVisible, setVisible, item }: any) => {
         const path = `${item.fullPath}/${difficultOption}`
         dispatch(setGamePerson(personOption))
         dispatch(setGameOption(path))
-        dispatch(setGameMode(true))
+        dispatch(setGameMode(true));
+        dispatch(setImage(item?.downloadData))
     }
 
     return (

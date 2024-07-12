@@ -4,20 +4,20 @@ import { styles } from './styles'
 import { useDispatch, useSelector } from 'react-redux'
 import { getPuzzlesBySpecial } from '../../redux/fileSlice'
 import Modal from '../../component/Modal/modal'
-import { LinearGradient } from 'expo-linear-gradient'
-
+import { Ionicons } from '@expo/vector-icons'
 const SpecialScreen = () => {
 
   const dispatch: any = useDispatch();
   const { speacialPuzzle } = useSelector((state: any) => state.file)
   const [visible, setVisible] = useState(false);
   const [item, setItem] = useState("");
-  const [data, setData] = useState<any>();
 
 
 
   useEffect(() => {
-    dispatch(getPuzzlesBySpecial(null))
+    if (speacialPuzzle.length == 0) {
+      dispatch(getPuzzlesBySpecial(null))
+    }
   }, [])
 
 
@@ -33,7 +33,13 @@ const SpecialScreen = () => {
                 style={styles.titleTopBox}
               >
                 <View style={styles.titleBottomBox}>
+                  <Ionicons name="star" size={16} color="#f7ef8a" />
+                  <Ionicons name="star" size={20} color="#f7ef8a" />
+                  <Ionicons name="star" size={24} color="#f7ef8a" />
                   <Text style={styles.titleText}>Özel</Text>
+                  <Ionicons name="star" size={24} color="#f7ef8a" />
+                  <Ionicons name="star" size={20} color="#f7ef8a" />
+                  <Ionicons name="star" size={16} color="#f7ef8a" />
                 </View>
               </View>
             )}

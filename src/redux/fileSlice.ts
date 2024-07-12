@@ -148,9 +148,11 @@ export const getPuzzlesByDaily = createAsyncThunk('get/puzzlesDaily', async (dat
           const downloadRef = ref(storage, `${data.fullPath}`)
           const metaData = await getMetadata(downloadRef);
           const docCreatedTime = metaData.timeCreated;
+          const time = new Date(docCreatedTime).getDate();
+
           const downloadData = await getDownloadURL(downloadRef)
 
-          dispatch(getPuzzlesByDailyImage({ id: puzzleId, downloadData: downloadData, time: docCreatedTime, fullPath: fullPath }))
+          dispatch(getPuzzlesByDailyImage({ id: puzzleId, downloadData: downloadData, time: time, fullPath: fullPath }))
         }
       }
     }
@@ -269,8 +271,6 @@ export const getGamePuzzlePieces = createAsyncThunk('get/gamePuzzlePieces', asyn
       twoPersonPuzzlePieces: twoPersonPieces
     }
 
-    console.log("Puzzle parçaları", puzzlePieces);
-
     return puzzlePieces
 
   } catch (error) {
@@ -315,7 +315,8 @@ type Model = {
   loadingGame: boolean,
   completedDatas: any[],
   totalPuzzleSize: any,
-  puzzleİsComplete: boolean
+  puzzleİsComplete: boolean,
+  image: string
 }
 
 const initialState: Model = {
@@ -351,7 +352,8 @@ const initialState: Model = {
   loadingGame: true,
   completedDatas: [],
   totalPuzzleSize: 0,
-  puzzleİsComplete: false
+  puzzleİsComplete: false,
+  image: ""
 }
 
 export const fileSlice = createSlice({
@@ -442,8 +444,11 @@ export const fileSlice = createSlice({
     setTotalPieces: (state, action) => {
       state.totalPuzzleSize = action.payload
     },
-    setPuzzleComplete: (state, action) => {
+    setPuzzleComplete: (state) => {
       state.puzzleİsComplete = false;
+    },
+    setImage: (state, action) => {
+      state.image = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -517,4 +522,4 @@ export const fileSlice = createSlice({
 
 
 export default fileSlice.reducer
-export const { setPuzzleComplete, setTotalPieces, setCompletedDatas, nullGamePuzzlePieces, getAllPuzzlesImage, getPuzzlesByDailyImage, getPuzzlesBySpecialImage, setArenaStartPosition, setLength, removePuzzlePiece, setGameMode, setGameOption, setGamePerson, main0, one36, two64, three100, four144, five225, six400, puzzleCategory, setDownloadData } = fileSlice.actions
+export const { setImage, setPuzzleComplete, setTotalPieces, setCompletedDatas, nullGamePuzzlePieces, getAllPuzzlesImage, getPuzzlesByDailyImage, getPuzzlesBySpecialImage, setArenaStartPosition, setLength, removePuzzlePiece, setGameMode, setGameOption, setGamePerson, main0, one36, two64, three100, four144, five225, six400, puzzleCategory, setDownloadData } = fileSlice.actions

@@ -18,6 +18,7 @@ const LoginScreen = () => {
     <LinearGradient
       colors={["#96ffc5", "#0086ff", "#00fff3"]}
       style={styles.container}>
+      <Text style={styles.loginText}>HOŞGELDİNİZ</Text>
       <GoogleSigninButton
         style={styles.signingBtn}
         size={GoogleSigninButton.Size.Standard}

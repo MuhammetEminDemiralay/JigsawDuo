@@ -34,6 +34,8 @@ export const googleSignin = createAsyncThunk("user/googleSignin", async () => {
         await AsyncStorage.setItem("_uid", data.user.uid);
         if (googleCredentials.idToken) {
             await AsyncStorage.setItem("_userToken", googleCredentials.idToken);
+            console.log("Test", await AsyncStorage.getItem("_uid"));
+
             const data = {
                 uid: await AsyncStorage.getItem("_uid"),
                 result: true

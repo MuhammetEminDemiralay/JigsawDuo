@@ -13,11 +13,12 @@ const DailyScreen = () => {
   const { dailyPuzzle } = useSelector((state: any) => state.file)
   const [visible, setVisible] = useState(false);
   const [item, setItem] = useState("");
-  const [data, setData] = useState<any>();
 
 
   useEffect(() => {
-    dispatch(getPuzzlesByDaily(null))
+    if (dailyPuzzle.length == 0) {
+      dispatch(getPuzzlesByDaily(null))
+    }
   }, [])
 
 

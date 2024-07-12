@@ -56,5 +56,25 @@ export const styles = StyleSheet.create({
         borderColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    btnBox: {
+        minWidth: '80%',
+        marginTop : 20,
+        height: 45,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+        elevation: 2,
+    },
+    btnText: {
+        fontSize: 20,
+        fontWeight: '500',
+    },
+    logoutText: {
+        fontSize: 25,
+        fontWeight: '700',
+        color: '#fff',
+        marginBottom: 20,
+        letterSpacing: 2
     }
 })

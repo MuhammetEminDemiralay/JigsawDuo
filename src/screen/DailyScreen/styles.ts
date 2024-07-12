@@ -42,7 +42,7 @@ export const styles = StyleSheet.create({
     },
     titleText: {
         fontSize: 25,
-        fontWeight: '500',
+        fontWeight: '700',
         color: '#fff',
         letterSpacing: 1
     },
@@ -68,5 +68,25 @@ export const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: '500',
         color: '#fff'
-    }
+    },
+    // dayBox: {
+    //     position: 'absolute',
+    //     right: 12,
+    //     top: 8,
+    //     width: (width * 0.425) / 5.5,
+    //     height: (width * 0.425) / 5.5,
+    //     backgroundColor: '#ef233c',
+    //     zIndex: 2,
+    //     borderRadius : 50,
+    //     elevation : 2,
+    //     alignItems : 'center',
+    //     justifyContent : 'center',
+    //     borderWidth : 1,
+    //     borderColor : '#fff'
+    // },
+    // dayText : {
+    //     fontWeight : '500',
+    //     fontSize : 16,
+    //     color : '#fff'
+    // }
 })

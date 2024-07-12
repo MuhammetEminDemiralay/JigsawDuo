@@ -39,12 +39,15 @@ export const styles = StyleSheet.create({
         borderBottomRightRadius: 5,
         borderBottomLeftRadius: 5,
         backgroundColor: '#212529',
+        flexDirection: 'row',
+        columnGap: 15
     },
     titleText: {
         fontSize: 25,
-        fontWeight: '500',
+        fontWeight: '700',
         color: '#fff',
-        letterSpacing: 1
+        letterSpacing: 1,
+        marginHorizontal: 5
     },
     box: {
         borderRadius: 10,
@@ -68,5 +71,26 @@ export const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: '500',
         color: '#fff'
+    },
+    star: {
+        position: 'absolute',
+    },
+    star1: {
+        left: 30
+    },
+    star2: {
+        left: 60
+    },
+    star3: {
+        left: 100
+    },
+    star4: {
+        right: 30
+    },
+    star5: {
+        right: 60
+    },
+    star6: {
+        right: 100
     }
 })

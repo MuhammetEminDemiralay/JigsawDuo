@@ -5,6 +5,7 @@ import Modal from '../../component/Modal/modal'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllPuzzles } from '../../redux/fileSlice'
 import { LinearGradient } from 'expo-linear-gradient'
+import SplashScreen from 'react-native-splash-screen'
 
 const { width, height } = Dimensions.get("window")
 
@@ -16,8 +17,11 @@ const HomeScreen = () => {
   const { allPuzzlesImage } = useSelector((state: any) => state.file)
 
 
+
   useEffect(() => {
-    dispatch(getAllPuzzles(null))
+    if (allPuzzlesImage.length == 0) {
+      dispatch(getAllPuzzles(null))
+    }
   }, [])
 
   return (
@@ -44,8 +48,8 @@ const HomeScreen = () => {
                     transform: [
                       { scale: pressed ? 0.9 : 1 }
                     ]
-                  }
-                  , styles.box]}
+                  },
+                  styles.box]}
                 key={index}
                 onPress={() => {
                   setVisible(true)

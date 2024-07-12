@@ -2,12 +2,14 @@ import React, { useEffect, useRef, useState } from 'react'
 import { ActivityIndicator, Dimensions, FlatList, Image, LayoutChangeEvent, Pressable, Text, View, Platform } from 'react-native'
 import { styles } from './styles'
 import { useDispatch, useSelector } from 'react-redux';
-import { getGamePuzzlePieces, nullGamePuzzlePieces, removePuzzlePiece, setArenaStartPosition, setGameMode, setLength, } from '../../redux/fileSlice';
+import { getGamePuzzlePieces, nullGamePuzzlePieces, removePuzzlePiece, setArenaStartPosition, setGameMode, setLength, setPuzzleComplete, } from '../../redux/fileSlice';
 import { GestureHandlerRootView, PanGestureHandler, PanGestureHandlerGestureEvent, State } from 'react-native-gesture-handler';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, FontAwesome6, Entypo } from '@expo/vector-icons';
 import Pan from '../../component/Pan';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BannerAd, BannerAdSize, useForeground, InterstitialAd, AdEventType } from 'react-native-google-mobile-ads';
+import { useNavigation } from '@react-navigation/native';
+import ReactNativeModal from 'react-native-modal';
 
 
 const { width } = Dimensions.get("window")
@@ -20,7 +22,8 @@ const interstitial = InterstitialAd.createForAdRequest(adUnitId, {
 const GameScreen = () => {
 
     const dispatch: any = useDispatch();
-    const { gamePuzzlePieces, puzzleİsComplete, gameOption, gamePerson, length, startPosition, loadingGame } = useSelector((state: any) => state.file)
+    const navigation: any = useNavigation();
+    const { gamePuzzlePieces, puzzleİsComplete, image, gameOption, gamePerson, length, startPosition, loadingGame } = useSelector((state: any) => state.file)
 
     useEffect(() => {
         dispatch(getGamePuzzlePieces(null))
@@ -44,14 +47,27 @@ const GameScreen = () => {
         }
     }, [loaded]);
 
+    useEffect(() => {
+        if (puzzleİsComplete) {
+            navigation.navigate("finish");
+        }
+    }, [puzzleİsComplete])
 
 
-    const bannerRef = useRef<BannerAd>(null);
-    const adUnitId = 'ca-app-pub-6544614784049955/3207274652';
+    // Banner 1
+
+    const oneBannerRef = useRef<BannerAd>(null);
+    const adOneUnitId = 'ca-app-pub-6544614784049955/3207274652';
     useForeground(() => {
-        Platform.OS === 'android' && bannerRef.current?.load();
+        Platform.OS === 'android' && oneBannerRef.current?.load();
     })
 
+    // Banner 2
+    const twoBannerRef = useRef<BannerAd>(null);
+    const adTwoUnitId = 'ca-app-pub-6544614784049955/3712409798';
+    useForeground(() => {
+        Platform.OS === 'android' && twoBannerRef.current?.load();
+    })
 
 
     const [oneHandTranslateX, setOneHandTranslateX] = useState<any>(5);
@@ -115,6 +131,14 @@ const GameScreen = () => {
         dispatch(setGameMode(false))
         dispatch(nullGamePuzzlePieces(null))
     }
+
+
+    const setFinish = () => {
+        dispatch(nullGamePuzzlePieces(null))
+        dispatch(setPuzzleComplete())
+        dispatch(setGameMode(false))
+    }
+
 
     const [state1, setState1] = useState<any>();
     const [state2, setState2] = useState<any>();
@@ -529,7 +553,6 @@ const GameScreen = () => {
 
             let puzzleDistance = 2
 
-            console.log("Puzzzzle distance", puzzleDistance);
 
             const number = Number(item.name)
 
@@ -1019,459 +1042,527 @@ const GameScreen = () => {
     return (
 
 
-        <GestureHandlerRootView style={styles.container}>
-
-
-
-            {state1 && <Pan state={state1} setState={setState1} />}
-            {state2 && <Pan state={state2} setState={setState2} />}
-            {state3 && <Pan state={state3} setState={setState3} />}
-            {state4 && <Pan state={state4} setState={setState4} />}
-            {state5 && <Pan state={state5} setState={setState5} />}
-            {state6 && <Pan state={state6} setState={setState6} />}
-            {state7 && <Pan state={state7} setState={setState7} />}
-            {state8 && <Pan state={state8} setState={setState8} />}
-            {state9 && <Pan state={state9} setState={setState9} />}
-            {state10 && <Pan state={state10} setState={setState10} />}
-            {state11 && <Pan state={state11} setState={setState11} />}
-            {state12 && <Pan state={state12} setState={setState12} />}
-            {state13 && <Pan state={state13} setState={setState13} />}
-            {state14 && <Pan state={state14} setState={setState14} />}
-            {state15 && <Pan state={state15} setState={setState15} />}
-            {state16 && <Pan state={state16} setState={setState16} />}
-            {state17 && <Pan state={state17} setState={setState17} />}
-            {state18 && <Pan state={state18} setState={setState18} />}
-            {state19 && <Pan state={state19} setState={setState19} />}
-            {state20 && <Pan state={state20} setState={setState20} />}
-            {state21 && <Pan state={state21} setState={setState21} />}
-            {state22 && <Pan state={state22} setState={setState22} />}
-            {state23 && <Pan state={state23} setState={setState23} />}
-            {state24 && <Pan state={state24} setState={setState24} />}
-            {state25 && <Pan state={state25} setState={setState25} />}
-            {state26 && <Pan state={state26} setState={setState26} />}
-            {state27 && <Pan state={state27} setState={setState27} />}
-            {state28 && <Pan state={state28} setState={setState28} />}
-            {state29 && <Pan state={state29} setState={setState29} />}
-            {state30 && <Pan state={state30} setState={setState30} />}
-            {state31 && <Pan state={state31} setState={setState31} />}
-            {state32 && <Pan state={state32} setState={setState32} />}
-            {state33 && <Pan state={state33} setState={setState33} />}
-            {state34 && <Pan state={state34} setState={setState34} />}
-            {state35 && <Pan state={state35} setState={setState35} />}
-            {state36 && <Pan state={state36} setState={setState36} />}
-            {state37 && <Pan state={state37} setState={setState37} />}
-            {state38 && <Pan state={state38} setState={setState38} />}
-            {state39 && <Pan state={state39} setState={setState39} />}
-            {state40 && <Pan state={state40} setState={setState40} />}
-            {state41 && <Pan state={state41} setState={setState41} />}
-            {state42 && <Pan state={state42} setState={setState42} />}
-            {state43 && <Pan state={state43} setState={setState43} />}
-            {state44 && <Pan state={state44} setState={setState44} />}
-            {state45 && <Pan state={state45} setState={setState45} />}
-            {state46 && <Pan state={state46} setState={setState46} />}
-            {state47 && <Pan state={state47} setState={setState47} />}
-            {state48 && <Pan state={state48} setState={setState48} />}
-            {state49 && <Pan state={state49} setState={setState49} />}
-            {state50 && <Pan state={state50} setState={setState50} />}
-            {state51 && <Pan state={state51} setState={setState51} />}
-            {state52 && <Pan state={state52} setState={setState52} />}
-            {state53 && <Pan state={state53} setState={setState53} />}
-            {state54 && <Pan state={state54} setState={setState54} />}
-            {state55 && <Pan state={state55} setState={setState55} />}
-            {state56 && <Pan state={state56} setState={setState56} />}
-            {state57 && <Pan state={state57} setState={setState57} />}
-            {state58 && <Pan state={state58} setState={setState58} />}
-            {state59 && <Pan state={state59} setState={setState59} />}
-            {state60 && <Pan state={state60} setState={setState60} />}
-            {state61 && <Pan state={state61} setState={setState61} />}
-            {state62 && <Pan state={state62} setState={setState62} />}
-            {state63 && <Pan state={state63} setState={setState63} />}
-            {state64 && <Pan state={state64} setState={setState64} />}
-            {state65 && <Pan state={state65} setState={setState65} />}
-            {state66 && <Pan state={state66} setState={setState66} />}
-            {state67 && <Pan state={state67} setState={setState67} />}
-            {state68 && <Pan state={state68} setState={setState68} />}
-            {state69 && <Pan state={state69} setState={setState69} />}
-            {state70 && <Pan state={state70} setState={setState70} />}
-            {state71 && <Pan state={state71} setState={setState71} />}
-            {state72 && <Pan state={state72} setState={setState72} />}
-            {state73 && <Pan state={state73} setState={setState73} />}
-            {state74 && <Pan state={state74} setState={setState74} />}
-            {state75 && <Pan state={state75} setState={setState75} />}
-            {state76 && <Pan state={state76} setState={setState76} />}
-            {state77 && <Pan state={state77} setState={setState77} />}
-            {state78 && <Pan state={state78} setState={setState78} />}
-            {state79 && <Pan state={state79} setState={setState79} />}
-            {state80 && <Pan state={state80} setState={setState80} />}
-            {state81 && <Pan state={state81} setState={setState81} />}
-            {state82 && <Pan state={state82} setState={setState82} />}
-            {state83 && <Pan state={state83} setState={setState83} />}
-            {state84 && <Pan state={state84} setState={setState84} />}
-            {state85 && <Pan state={state85} setState={setState85} />}
-            {state86 && <Pan state={state86} setState={setState86} />}
-            {state87 && <Pan state={state87} setState={setState87} />}
-            {state88 && <Pan state={state88} setState={setState88} />}
-            {state89 && <Pan state={state89} setState={setState89} />}
-            {state90 && <Pan state={state90} setState={setState90} />}
-            {state91 && <Pan state={state91} setState={setState91} />}
-            {state92 && <Pan state={state92} setState={setState92} />}
-            {state93 && <Pan state={state93} setState={setState93} />}
-            {state94 && <Pan state={state94} setState={setState94} />}
-            {state95 && <Pan state={state95} setState={setState95} />}
-            {state96 && <Pan state={state96} setState={setState96} />}
-            {state97 && <Pan state={state97} setState={setState97} />}
-            {state98 && <Pan state={state98} setState={setState98} />}
-            {state99 && <Pan state={state99} setState={setState99} />}
-            {state100 && <Pan state={state100} setState={setState100} />}
-            {state101 && <Pan state={state101} setState={setState101} />}
-            {state102 && <Pan state={state102} setState={setState102} />}
-            {state103 && <Pan state={state103} setState={setState103} />}
-            {state104 && <Pan state={state104} setState={setState104} />}
-            {state105 && <Pan state={state105} setState={setState105} />}
-            {state106 && <Pan state={state106} setState={setState106} />}
-            {state107 && <Pan state={state107} setState={setState107} />}
-            {state108 && <Pan state={state108} setState={setState108} />}
-            {state109 && <Pan state={state109} setState={setState109} />}
-            {state110 && <Pan state={state110} setState={setState110} />}
-            {state111 && <Pan state={state111} setState={setState111} />}
-            {state112 && <Pan state={state112} setState={setState112} />}
-            {state113 && <Pan state={state113} setState={setState113} />}
-            {state114 && <Pan state={state114} setState={setState114} />}
-            {state115 && <Pan state={state115} setState={setState115} />}
-            {state116 && <Pan state={state116} setState={setState116} />}
-            {state117 && <Pan state={state117} setState={setState117} />}
-            {state118 && <Pan state={state118} setState={setState118} />}
-            {state119 && <Pan state={state119} setState={setState119} />}
-            {state120 && <Pan state={state120} setState={setState120} />}
-            {state121 && <Pan state={state121} setState={setState121} />}
-            {state122 && <Pan state={state122} setState={setState122} />}
-            {state123 && <Pan state={state123} setState={setState123} />}
-            {state124 && <Pan state={state124} setState={setState124} />}
-            {state125 && <Pan state={state125} setState={setState125} />}
-            {state126 && <Pan state={state126} setState={setState126} />}
-            {state127 && <Pan state={state127} setState={setState127} />}
-            {state128 && <Pan state={state128} setState={setState128} />}
-            {state129 && <Pan state={state129} setState={setState129} />}
-            {state130 && <Pan state={state130} setState={setState130} />}
-            {state131 && <Pan state={state131} setState={setState131} />}
-            {state132 && <Pan state={state132} setState={setState132} />}
-            {state133 && <Pan state={state133} setState={setState133} />}
-            {state134 && <Pan state={state134} setState={setState134} />}
-            {state135 && <Pan state={state135} setState={setState135} />}
-            {state136 && <Pan state={state136} setState={setState136} />}
-            {state137 && <Pan state={state137} setState={setState137} />}
-            {state138 && <Pan state={state138} setState={setState138} />}
-            {state139 && <Pan state={state139} setState={setState139} />}
-            {state140 && <Pan state={state140} setState={setState140} />}
-            {state141 && <Pan state={state141} setState={setState141} />}
-            {state142 && <Pan state={state142} setState={setState142} />}
-            {state143 && <Pan state={state143} setState={setState143} />}
-            {state144 && <Pan state={state144} setState={setState144} />}
-            {state145 && <Pan state={state145} setState={setState145} />}
-            {state146 && <Pan state={state146} setState={setState146} />}
-            {state147 && <Pan state={state147} setState={setState147} />}
-            {state148 && <Pan state={state148} setState={setState148} />}
-            {state149 && <Pan state={state149} setState={setState149} />}
-            {state150 && <Pan state={state150} setState={setState150} />}
-            {state151 && <Pan state={state151} setState={setState151} />}
-            {state152 && <Pan state={state152} setState={setState152} />}
-            {state153 && <Pan state={state153} setState={setState153} />}
-            {state154 && <Pan state={state154} setState={setState154} />}
-            {state155 && <Pan state={state155} setState={setState155} />}
-            {state156 && <Pan state={state156} setState={setState156} />}
-            {state157 && <Pan state={state157} setState={setState157} />}
-            {state158 && <Pan state={state158} setState={setState158} />}
-            {state159 && <Pan state={state159} setState={setState159} />}
-            {state160 && <Pan state={state160} setState={setState160} />}
-            {state161 && <Pan state={state161} setState={setState161} />}
-            {state162 && <Pan state={state162} setState={setState162} />}
-            {state163 && <Pan state={state163} setState={setState163} />}
-            {state164 && <Pan state={state164} setState={setState164} />}
-            {state165 && <Pan state={state165} setState={setState165} />}
-            {state166 && <Pan state={state166} setState={setState166} />}
-            {state167 && <Pan state={state167} setState={setState167} />}
-            {state168 && <Pan state={state168} setState={setState168} />}
-            {state169 && <Pan state={state169} setState={setState169} />}
-            {state170 && <Pan state={state170} setState={setState170} />}
-            {state171 && <Pan state={state171} setState={setState171} />}
-            {state172 && <Pan state={state172} setState={setState172} />}
-            {state173 && <Pan state={state173} setState={setState173} />}
-            {state174 && <Pan state={state174} setState={setState174} />}
-            {state175 && <Pan state={state175} setState={setState175} />}
-            {state176 && <Pan state={state176} setState={setState176} />}
-            {state177 && <Pan state={state177} setState={setState177} />}
-            {state178 && <Pan state={state178} setState={setState178} />}
-            {state179 && <Pan state={state179} setState={setState179} />}
-            {state180 && <Pan state={state180} setState={setState180} />}
-            {state181 && <Pan state={state181} setState={setState181} />}
-            {state182 && <Pan state={state182} setState={setState182} />}
-            {state183 && <Pan state={state183} setState={setState183} />}
-            {state184 && <Pan state={state184} setState={setState184} />}
-            {state185 && <Pan state={state185} setState={setState185} />}
-            {state186 && <Pan state={state186} setState={setState186} />}
-            {state187 && <Pan state={state187} setState={setState187} />}
-            {state188 && <Pan state={state188} setState={setState188} />}
-            {state189 && <Pan state={state189} setState={setState189} />}
-            {state190 && <Pan state={state190} setState={setState190} />}
-            {state191 && <Pan state={state191} setState={setState191} />}
-            {state192 && <Pan state={state192} setState={setState192} />}
-            {state193 && <Pan state={state193} setState={setState193} />}
-            {state194 && <Pan state={state194} setState={setState194} />}
-            {state195 && <Pan state={state195} setState={setState195} />}
-            {state196 && <Pan state={state196} setState={setState196} />}
-            {state197 && <Pan state={state197} setState={setState197} />}
-            {state198 && <Pan state={state198} setState={setState198} />}
-            {state199 && <Pan state={state199} setState={setState199} />}
-            {state200 && <Pan state={state200} setState={setState200} />}
-            {state201 && <Pan state={state201} setState={setState201} />}
-            {state202 && <Pan state={state202} setState={setState202} />}
-            {state203 && <Pan state={state203} setState={setState203} />}
-            {state204 && <Pan state={state204} setState={setState204} />}
-            {state205 && <Pan state={state205} setState={setState205} />}
-            {state206 && <Pan state={state206} setState={setState206} />}
-            {state207 && <Pan state={state207} setState={setState207} />}
-            {state208 && <Pan state={state208} setState={setState208} />}
-            {state209 && <Pan state={state209} setState={setState209} />}
-            {state210 && <Pan state={state210} setState={setState210} />}
-            {state211 && <Pan state={state211} setState={setState211} />}
-            {state212 && <Pan state={state212} setState={setState212} />}
-            {state213 && <Pan state={state213} setState={setState213} />}
-            {state214 && <Pan state={state214} setState={setState214} />}
-            {state215 && <Pan state={state215} setState={setState215} />}
-            {state216 && <Pan state={state216} setState={setState216} />}
-            {state217 && <Pan state={state217} setState={setState217} />}
-            {state218 && <Pan state={state218} setState={setState218} />}
-            {state219 && <Pan state={state219} setState={setState219} />}
-            {state220 && <Pan state={state220} setState={setState220} />}
-            {state221 && <Pan state={state221} setState={setState221} />}
-            {state222 && <Pan state={state222} setState={setState222} />}
-            {state223 && <Pan state={state223} setState={setState223} />}
-            {state224 && <Pan state={state224} setState={setState224} />}
-            {state225 && <Pan state={state225} setState={setState225} />}
-            {state226 && <Pan state={state226} setState={setState226} />}
-            {state227 && <Pan state={state227} setState={setState227} />}
-            {state228 && <Pan state={state228} setState={setState228} />}
-            {state229 && <Pan state={state229} setState={setState229} />}
-            {state230 && <Pan state={state230} setState={setState230} />}
-            {state231 && <Pan state={state231} setState={setState231} />}
-            {state232 && <Pan state={state232} setState={setState232} />}
-            {state233 && <Pan state={state233} setState={setState233} />}
-            {state234 && <Pan state={state234} setState={setState234} />}
-            {state235 && <Pan state={state235} setState={setState235} />}
-            {state236 && <Pan state={state236} setState={setState236} />}
-            {state237 && <Pan state={state237} setState={setState237} />}
-            {state238 && <Pan state={state238} setState={setState238} />}
-            {state239 && <Pan state={state239} setState={setState239} />}
-            {state240 && <Pan state={state240} setState={setState240} />}
-            {state241 && <Pan state={state241} setState={setState241} />}
-            {state242 && <Pan state={state242} setState={setState242} />}
-            {state243 && <Pan state={state243} setState={setState243} />}
-            {state244 && <Pan state={state244} setState={setState244} />}
-            {state245 && <Pan state={state245} setState={setState245} />}
-            {state246 && <Pan state={state246} setState={setState246} />}
-            {state247 && <Pan state={state247} setState={setState247} />}
-            {state248 && <Pan state={state248} setState={setState248} />}
-            {state249 && <Pan state={state249} setState={setState249} />}
-            {state250 && <Pan state={state250} setState={setState250} />}
-            {state251 && <Pan state={state251} setState={setState251} />}
-            {state252 && <Pan state={state252} setState={setState252} />}
-            {state253 && <Pan state={state253} setState={setState253} />}
-            {state254 && <Pan state={state254} setState={setState254} />}
-            {state255 && <Pan state={state255} setState={setState255} />}
-            {state256 && <Pan state={state256} setState={setState256} />}
-            {state257 && <Pan state={state257} setState={setState257} />}
-            {state258 && <Pan state={state258} setState={setState258} />}
-            {state259 && <Pan state={state259} setState={setState259} />}
-            {state260 && <Pan state={state260} setState={setState260} />}
-            {state261 && <Pan state={state261} setState={setState261} />}
-            {state262 && <Pan state={state262} setState={setState262} />}
-            {state263 && <Pan state={state263} setState={setState263} />}
-            {state264 && <Pan state={state264} setState={setState264} />}
-            {state265 && <Pan state={state265} setState={setState265} />}
-            {state266 && <Pan state={state266} setState={setState266} />}
-            {state267 && <Pan state={state267} setState={setState267} />}
-            {state268 && <Pan state={state268} setState={setState268} />}
-            {state269 && <Pan state={state269} setState={setState269} />}
-            {state270 && <Pan state={state270} setState={setState270} />}
-            {state271 && <Pan state={state271} setState={setState271} />}
-            {state272 && <Pan state={state272} setState={setState272} />}
-            {state273 && <Pan state={state273} setState={setState273} />}
-            {state274 && <Pan state={state274} setState={setState274} />}
-            {state275 && <Pan state={state275} setState={setState275} />}
-            {state276 && <Pan state={state276} setState={setState276} />}
-            {state277 && <Pan state={state277} setState={setState277} />}
-            {state278 && <Pan state={state278} setState={setState278} />}
-            {state279 && <Pan state={state279} setState={setState279} />}
-            {state280 && <Pan state={state280} setState={setState280} />}
-            {state281 && <Pan state={state281} setState={setState281} />}
-            {state282 && <Pan state={state282} setState={setState282} />}
-            {state283 && <Pan state={state283} setState={setState283} />}
-            {state284 && <Pan state={state284} setState={setState284} />}
-            {state285 && <Pan state={state285} setState={setState285} />}
-            {state286 && <Pan state={state286} setState={setState286} />}
-            {state287 && <Pan state={state287} setState={setState287} />}
-            {state288 && <Pan state={state288} setState={setState288} />}
-            {state289 && <Pan state={state289} setState={setState289} />}
-            {state290 && <Pan state={state290} setState={setState290} />}
-            {state291 && <Pan state={state291} setState={setState291} />}
-            {state292 && <Pan state={state292} setState={setState292} />}
-            {state293 && <Pan state={state293} setState={setState293} />}
-            {state294 && <Pan state={state294} setState={setState294} />}
-            {state295 && <Pan state={state295} setState={setState295} />}
-            {state296 && <Pan state={state296} setState={setState296} />}
-            {state297 && <Pan state={state297} setState={setState297} />}
-            {state298 && <Pan state={state298} setState={setState298} />}
-            {state299 && <Pan state={state299} setState={setState299} />}
-            {state300 && <Pan state={state300} setState={setState300} />}
-            {state301 && <Pan state={state301} setState={setState301} />}
-            {state302 && <Pan state={state302} setState={setState302} />}
-            {state303 && <Pan state={state303} setState={setState303} />}
-            {state304 && <Pan state={state304} setState={setState304} />}
-            {state305 && <Pan state={state305} setState={setState305} />}
-            {state306 && <Pan state={state306} setState={setState306} />}
-            {state307 && <Pan state={state307} setState={setState307} />}
-            {state308 && <Pan state={state308} setState={setState308} />}
-            {state309 && <Pan state={state309} setState={setState309} />}
-            {state310 && <Pan state={state310} setState={setState310} />}
-            {state311 && <Pan state={state311} setState={setState311} />}
-            {state312 && <Pan state={state312} setState={setState312} />}
-            {state313 && <Pan state={state313} setState={setState313} />}
-            {state314 && <Pan state={state314} setState={setState314} />}
-            {state315 && <Pan state={state315} setState={setState315} />}
-            {state316 && <Pan state={state316} setState={setState316} />}
-            {state317 && <Pan state={state317} setState={setState317} />}
-            {state318 && <Pan state={state318} setState={setState318} />}
-            {state319 && <Pan state={state319} setState={setState319} />}
-            {state320 && <Pan state={state320} setState={setState320} />}
-            {state321 && <Pan state={state321} setState={setState321} />}
-            {state322 && <Pan state={state322} setState={setState322} />}
-            {state323 && <Pan state={state323} setState={setState323} />}
-            {state324 && <Pan state={state324} setState={setState324} />}
-            {state325 && <Pan state={state325} setState={setState325} />}
-            {state326 && <Pan state={state326} setState={setState326} />}
-            {state327 && <Pan state={state327} setState={setState327} />}
-            {state328 && <Pan state={state328} setState={setState328} />}
-            {state329 && <Pan state={state329} setState={setState329} />}
-            {state330 && <Pan state={state330} setState={setState330} />}
-            {state331 && <Pan state={state331} setState={setState331} />}
-            {state332 && <Pan state={state332} setState={setState332} />}
-            {state333 && <Pan state={state333} setState={setState333} />}
-            {state334 && <Pan state={state334} setState={setState334} />}
-            {state335 && <Pan state={state335} setState={setState335} />}
-            {state336 && <Pan state={state336} setState={setState336} />}
-            {state337 && <Pan state={state337} setState={setState337} />}
-            {state338 && <Pan state={state338} setState={setState338} />}
-            {state339 && <Pan state={state339} setState={setState339} />}
-            {state340 && <Pan state={state340} setState={setState340} />}
-            {state341 && <Pan state={state341} setState={setState341} />}
-            {state342 && <Pan state={state342} setState={setState342} />}
-            {state343 && <Pan state={state343} setState={setState343} />}
-            {state344 && <Pan state={state344} setState={setState344} />}
-            {state345 && <Pan state={state345} setState={setState345} />}
-            {state346 && <Pan state={state346} setState={setState346} />}
-            {state347 && <Pan state={state347} setState={setState347} />}
-            {state348 && <Pan state={state348} setState={setState348} />}
-            {state349 && <Pan state={state349} setState={setState349} />}
-            {state350 && <Pan state={state350} setState={setState350} />}
-            {state351 && <Pan state={state351} setState={setState351} />}
-            {state352 && <Pan state={state352} setState={setState352} />}
-            {state353 && <Pan state={state353} setState={setState353} />}
-            {state354 && <Pan state={state354} setState={setState354} />}
-            {state355 && <Pan state={state355} setState={setState355} />}
-            {state356 && <Pan state={state356} setState={setState356} />}
-            {state357 && <Pan state={state357} setState={setState357} />}
-            {state358 && <Pan state={state358} setState={setState358} />}
-            {state359 && <Pan state={state359} setState={setState359} />}
-            {state360 && <Pan state={state360} setState={setState360} />}
-            {state361 && <Pan state={state361} setState={setState361} />}
-            {state362 && <Pan state={state362} setState={setState362} />}
-            {state363 && <Pan state={state363} setState={setState363} />}
-            {state364 && <Pan state={state364} setState={setState364} />}
-            {state365 && <Pan state={state365} setState={setState365} />}
-            {state366 && <Pan state={state366} setState={setState366} />}
-            {state367 && <Pan state={state367} setState={setState367} />}
-            {state368 && <Pan state={state368} setState={setState368} />}
-            {state369 && <Pan state={state369} setState={setState369} />}
-            {state370 && <Pan state={state370} setState={setState370} />}
-            {state371 && <Pan state={state371} setState={setState371} />}
-            {state372 && <Pan state={state372} setState={setState372} />}
-            {state373 && <Pan state={state373} setState={setState373} />}
-            {state374 && <Pan state={state374} setState={setState374} />}
-            {state375 && <Pan state={state375} setState={setState375} />}
-            {state376 && <Pan state={state376} setState={setState376} />}
-            {state377 && <Pan state={state377} setState={setState377} />}
-            {state378 && <Pan state={state378} setState={setState378} />}
-            {state379 && <Pan state={state379} setState={setState379} />}
-            {state380 && <Pan state={state380} setState={setState380} />}
-            {state381 && <Pan state={state381} setState={setState381} />}
-            {state382 && <Pan state={state382} setState={setState382} />}
-            {state383 && <Pan state={state383} setState={setState383} />}
-            {state384 && <Pan state={state384} setState={setState384} />}
-            {state385 && <Pan state={state385} setState={setState385} />}
-            {state386 && <Pan state={state386} setState={setState386} />}
-            {state387 && <Pan state={state387} setState={setState387} />}
-            {state388 && <Pan state={state388} setState={setState388} />}
-            {state389 && <Pan state={state389} setState={setState389} />}
-            {state390 && <Pan state={state390} setState={setState390} />}
-            {state391 && <Pan state={state391} setState={setState391} />}
-            {state392 && <Pan state={state392} setState={setState392} />}
-            {state393 && <Pan state={state393} setState={setState393} />}
-            {state394 && <Pan state={state394} setState={setState394} />}
-            {state395 && <Pan state={state395} setState={setState395} />}
-            {state396 && <Pan state={state396} setState={setState396} />}
-            {state397 && <Pan state={state397} setState={setState397} />}
-            {state398 && <Pan state={state398} setState={setState398} />}
-            {state399 && <Pan state={state399} setState={setState399} />}
-            {state400 && <Pan state={state400} setState={setState400} />}
-
-
-
-            <View style={styles.banner}>
-
-            </View>
-
-
-
-
-            {/* Hand */}
+        <>
             {
-                gamePerson == "2" &&
-                <LinearGradient
-                    colors={["#fff", "#fff", "red", "#fff", "#fff"]}
-                    style={styles.handBox}
-                    onLayout={(event) => screenLayout(event)}
-                >
-                    <PanGestureHandler
-                        onGestureEvent={(event) => twoHandGestureEvent(event)}
-                    >
-                        <Pressable
-                            style={[{
-                                transform: twoHandTranslateX && handHeight && [
-                                    { translateX: twoHandTranslateX },
-                                ],
-                                zIndex: 99,
-                                position: 'absolute',
-                                backgroundColor: 'red'
-                            },
-                            styles.hand]}
+                puzzleİsComplete == false &&
+                <GestureHandlerRootView style={styles.container}>
+
+                    {state1 && <Pan state={state1} setState={setState1} />}
+                    {state2 && <Pan state={state2} setState={setState2} />}
+                    {state3 && <Pan state={state3} setState={setState3} />}
+                    {state4 && <Pan state={state4} setState={setState4} />}
+                    {state5 && <Pan state={state5} setState={setState5} />}
+                    {state6 && <Pan state={state6} setState={setState6} />}
+                    {state7 && <Pan state={state7} setState={setState7} />}
+                    {state8 && <Pan state={state8} setState={setState8} />}
+                    {state9 && <Pan state={state9} setState={setState9} />}
+                    {state10 && <Pan state={state10} setState={setState10} />}
+                    {state11 && <Pan state={state11} setState={setState11} />}
+                    {state12 && <Pan state={state12} setState={setState12} />}
+                    {state13 && <Pan state={state13} setState={setState13} />}
+                    {state14 && <Pan state={state14} setState={setState14} />}
+                    {state15 && <Pan state={state15} setState={setState15} />}
+                    {state16 && <Pan state={state16} setState={setState16} />}
+                    {state17 && <Pan state={state17} setState={setState17} />}
+                    {state18 && <Pan state={state18} setState={setState18} />}
+                    {state19 && <Pan state={state19} setState={setState19} />}
+                    {state20 && <Pan state={state20} setState={setState20} />}
+                    {state21 && <Pan state={state21} setState={setState21} />}
+                    {state22 && <Pan state={state22} setState={setState22} />}
+                    {state23 && <Pan state={state23} setState={setState23} />}
+                    {state24 && <Pan state={state24} setState={setState24} />}
+                    {state25 && <Pan state={state25} setState={setState25} />}
+                    {state26 && <Pan state={state26} setState={setState26} />}
+                    {state27 && <Pan state={state27} setState={setState27} />}
+                    {state28 && <Pan state={state28} setState={setState28} />}
+                    {state29 && <Pan state={state29} setState={setState29} />}
+                    {state30 && <Pan state={state30} setState={setState30} />}
+                    {state31 && <Pan state={state31} setState={setState31} />}
+                    {state32 && <Pan state={state32} setState={setState32} />}
+                    {state33 && <Pan state={state33} setState={setState33} />}
+                    {state34 && <Pan state={state34} setState={setState34} />}
+                    {state35 && <Pan state={state35} setState={setState35} />}
+                    {state36 && <Pan state={state36} setState={setState36} />}
+                    {state37 && <Pan state={state37} setState={setState37} />}
+                    {state38 && <Pan state={state38} setState={setState38} />}
+                    {state39 && <Pan state={state39} setState={setState39} />}
+                    {state40 && <Pan state={state40} setState={setState40} />}
+                    {state41 && <Pan state={state41} setState={setState41} />}
+                    {state42 && <Pan state={state42} setState={setState42} />}
+                    {state43 && <Pan state={state43} setState={setState43} />}
+                    {state44 && <Pan state={state44} setState={setState44} />}
+                    {state45 && <Pan state={state45} setState={setState45} />}
+                    {state46 && <Pan state={state46} setState={setState46} />}
+                    {state47 && <Pan state={state47} setState={setState47} />}
+                    {state48 && <Pan state={state48} setState={setState48} />}
+                    {state49 && <Pan state={state49} setState={setState49} />}
+                    {state50 && <Pan state={state50} setState={setState50} />}
+                    {state51 && <Pan state={state51} setState={setState51} />}
+                    {state52 && <Pan state={state52} setState={setState52} />}
+                    {state53 && <Pan state={state53} setState={setState53} />}
+                    {state54 && <Pan state={state54} setState={setState54} />}
+                    {state55 && <Pan state={state55} setState={setState55} />}
+                    {state56 && <Pan state={state56} setState={setState56} />}
+                    {state57 && <Pan state={state57} setState={setState57} />}
+                    {state58 && <Pan state={state58} setState={setState58} />}
+                    {state59 && <Pan state={state59} setState={setState59} />}
+                    {state60 && <Pan state={state60} setState={setState60} />}
+                    {state61 && <Pan state={state61} setState={setState61} />}
+                    {state62 && <Pan state={state62} setState={setState62} />}
+                    {state63 && <Pan state={state63} setState={setState63} />}
+                    {state64 && <Pan state={state64} setState={setState64} />}
+                    {state65 && <Pan state={state65} setState={setState65} />}
+                    {state66 && <Pan state={state66} setState={setState66} />}
+                    {state67 && <Pan state={state67} setState={setState67} />}
+                    {state68 && <Pan state={state68} setState={setState68} />}
+                    {state69 && <Pan state={state69} setState={setState69} />}
+                    {state70 && <Pan state={state70} setState={setState70} />}
+                    {state71 && <Pan state={state71} setState={setState71} />}
+                    {state72 && <Pan state={state72} setState={setState72} />}
+                    {state73 && <Pan state={state73} setState={setState73} />}
+                    {state74 && <Pan state={state74} setState={setState74} />}
+                    {state75 && <Pan state={state75} setState={setState75} />}
+                    {state76 && <Pan state={state76} setState={setState76} />}
+                    {state77 && <Pan state={state77} setState={setState77} />}
+                    {state78 && <Pan state={state78} setState={setState78} />}
+                    {state79 && <Pan state={state79} setState={setState79} />}
+                    {state80 && <Pan state={state80} setState={setState80} />}
+                    {state81 && <Pan state={state81} setState={setState81} />}
+                    {state82 && <Pan state={state82} setState={setState82} />}
+                    {state83 && <Pan state={state83} setState={setState83} />}
+                    {state84 && <Pan state={state84} setState={setState84} />}
+                    {state85 && <Pan state={state85} setState={setState85} />}
+                    {state86 && <Pan state={state86} setState={setState86} />}
+                    {state87 && <Pan state={state87} setState={setState87} />}
+                    {state88 && <Pan state={state88} setState={setState88} />}
+                    {state89 && <Pan state={state89} setState={setState89} />}
+                    {state90 && <Pan state={state90} setState={setState90} />}
+                    {state91 && <Pan state={state91} setState={setState91} />}
+                    {state92 && <Pan state={state92} setState={setState92} />}
+                    {state93 && <Pan state={state93} setState={setState93} />}
+                    {state94 && <Pan state={state94} setState={setState94} />}
+                    {state95 && <Pan state={state95} setState={setState95} />}
+                    {state96 && <Pan state={state96} setState={setState96} />}
+                    {state97 && <Pan state={state97} setState={setState97} />}
+                    {state98 && <Pan state={state98} setState={setState98} />}
+                    {state99 && <Pan state={state99} setState={setState99} />}
+                    {state100 && <Pan state={state100} setState={setState100} />}
+                    {state101 && <Pan state={state101} setState={setState101} />}
+                    {state102 && <Pan state={state102} setState={setState102} />}
+                    {state103 && <Pan state={state103} setState={setState103} />}
+                    {state104 && <Pan state={state104} setState={setState104} />}
+                    {state105 && <Pan state={state105} setState={setState105} />}
+                    {state106 && <Pan state={state106} setState={setState106} />}
+                    {state107 && <Pan state={state107} setState={setState107} />}
+                    {state108 && <Pan state={state108} setState={setState108} />}
+                    {state109 && <Pan state={state109} setState={setState109} />}
+                    {state110 && <Pan state={state110} setState={setState110} />}
+                    {state111 && <Pan state={state111} setState={setState111} />}
+                    {state112 && <Pan state={state112} setState={setState112} />}
+                    {state113 && <Pan state={state113} setState={setState113} />}
+                    {state114 && <Pan state={state114} setState={setState114} />}
+                    {state115 && <Pan state={state115} setState={setState115} />}
+                    {state116 && <Pan state={state116} setState={setState116} />}
+                    {state117 && <Pan state={state117} setState={setState117} />}
+                    {state118 && <Pan state={state118} setState={setState118} />}
+                    {state119 && <Pan state={state119} setState={setState119} />}
+                    {state120 && <Pan state={state120} setState={setState120} />}
+                    {state121 && <Pan state={state121} setState={setState121} />}
+                    {state122 && <Pan state={state122} setState={setState122} />}
+                    {state123 && <Pan state={state123} setState={setState123} />}
+                    {state124 && <Pan state={state124} setState={setState124} />}
+                    {state125 && <Pan state={state125} setState={setState125} />}
+                    {state126 && <Pan state={state126} setState={setState126} />}
+                    {state127 && <Pan state={state127} setState={setState127} />}
+                    {state128 && <Pan state={state128} setState={setState128} />}
+                    {state129 && <Pan state={state129} setState={setState129} />}
+                    {state130 && <Pan state={state130} setState={setState130} />}
+                    {state131 && <Pan state={state131} setState={setState131} />}
+                    {state132 && <Pan state={state132} setState={setState132} />}
+                    {state133 && <Pan state={state133} setState={setState133} />}
+                    {state134 && <Pan state={state134} setState={setState134} />}
+                    {state135 && <Pan state={state135} setState={setState135} />}
+                    {state136 && <Pan state={state136} setState={setState136} />}
+                    {state137 && <Pan state={state137} setState={setState137} />}
+                    {state138 && <Pan state={state138} setState={setState138} />}
+                    {state139 && <Pan state={state139} setState={setState139} />}
+                    {state140 && <Pan state={state140} setState={setState140} />}
+                    {state141 && <Pan state={state141} setState={setState141} />}
+                    {state142 && <Pan state={state142} setState={setState142} />}
+                    {state143 && <Pan state={state143} setState={setState143} />}
+                    {state144 && <Pan state={state144} setState={setState144} />}
+                    {state145 && <Pan state={state145} setState={setState145} />}
+                    {state146 && <Pan state={state146} setState={setState146} />}
+                    {state147 && <Pan state={state147} setState={setState147} />}
+                    {state148 && <Pan state={state148} setState={setState148} />}
+                    {state149 && <Pan state={state149} setState={setState149} />}
+                    {state150 && <Pan state={state150} setState={setState150} />}
+                    {state151 && <Pan state={state151} setState={setState151} />}
+                    {state152 && <Pan state={state152} setState={setState152} />}
+                    {state153 && <Pan state={state153} setState={setState153} />}
+                    {state154 && <Pan state={state154} setState={setState154} />}
+                    {state155 && <Pan state={state155} setState={setState155} />}
+                    {state156 && <Pan state={state156} setState={setState156} />}
+                    {state157 && <Pan state={state157} setState={setState157} />}
+                    {state158 && <Pan state={state158} setState={setState158} />}
+                    {state159 && <Pan state={state159} setState={setState159} />}
+                    {state160 && <Pan state={state160} setState={setState160} />}
+                    {state161 && <Pan state={state161} setState={setState161} />}
+                    {state162 && <Pan state={state162} setState={setState162} />}
+                    {state163 && <Pan state={state163} setState={setState163} />}
+                    {state164 && <Pan state={state164} setState={setState164} />}
+                    {state165 && <Pan state={state165} setState={setState165} />}
+                    {state166 && <Pan state={state166} setState={setState166} />}
+                    {state167 && <Pan state={state167} setState={setState167} />}
+                    {state168 && <Pan state={state168} setState={setState168} />}
+                    {state169 && <Pan state={state169} setState={setState169} />}
+                    {state170 && <Pan state={state170} setState={setState170} />}
+                    {state171 && <Pan state={state171} setState={setState171} />}
+                    {state172 && <Pan state={state172} setState={setState172} />}
+                    {state173 && <Pan state={state173} setState={setState173} />}
+                    {state174 && <Pan state={state174} setState={setState174} />}
+                    {state175 && <Pan state={state175} setState={setState175} />}
+                    {state176 && <Pan state={state176} setState={setState176} />}
+                    {state177 && <Pan state={state177} setState={setState177} />}
+                    {state178 && <Pan state={state178} setState={setState178} />}
+                    {state179 && <Pan state={state179} setState={setState179} />}
+                    {state180 && <Pan state={state180} setState={setState180} />}
+                    {state181 && <Pan state={state181} setState={setState181} />}
+                    {state182 && <Pan state={state182} setState={setState182} />}
+                    {state183 && <Pan state={state183} setState={setState183} />}
+                    {state184 && <Pan state={state184} setState={setState184} />}
+                    {state185 && <Pan state={state185} setState={setState185} />}
+                    {state186 && <Pan state={state186} setState={setState186} />}
+                    {state187 && <Pan state={state187} setState={setState187} />}
+                    {state188 && <Pan state={state188} setState={setState188} />}
+                    {state189 && <Pan state={state189} setState={setState189} />}
+                    {state190 && <Pan state={state190} setState={setState190} />}
+                    {state191 && <Pan state={state191} setState={setState191} />}
+                    {state192 && <Pan state={state192} setState={setState192} />}
+                    {state193 && <Pan state={state193} setState={setState193} />}
+                    {state194 && <Pan state={state194} setState={setState194} />}
+                    {state195 && <Pan state={state195} setState={setState195} />}
+                    {state196 && <Pan state={state196} setState={setState196} />}
+                    {state197 && <Pan state={state197} setState={setState197} />}
+                    {state198 && <Pan state={state198} setState={setState198} />}
+                    {state199 && <Pan state={state199} setState={setState199} />}
+                    {state200 && <Pan state={state200} setState={setState200} />}
+                    {state201 && <Pan state={state201} setState={setState201} />}
+                    {state202 && <Pan state={state202} setState={setState202} />}
+                    {state203 && <Pan state={state203} setState={setState203} />}
+                    {state204 && <Pan state={state204} setState={setState204} />}
+                    {state205 && <Pan state={state205} setState={setState205} />}
+                    {state206 && <Pan state={state206} setState={setState206} />}
+                    {state207 && <Pan state={state207} setState={setState207} />}
+                    {state208 && <Pan state={state208} setState={setState208} />}
+                    {state209 && <Pan state={state209} setState={setState209} />}
+                    {state210 && <Pan state={state210} setState={setState210} />}
+                    {state211 && <Pan state={state211} setState={setState211} />}
+                    {state212 && <Pan state={state212} setState={setState212} />}
+                    {state213 && <Pan state={state213} setState={setState213} />}
+                    {state214 && <Pan state={state214} setState={setState214} />}
+                    {state215 && <Pan state={state215} setState={setState215} />}
+                    {state216 && <Pan state={state216} setState={setState216} />}
+                    {state217 && <Pan state={state217} setState={setState217} />}
+                    {state218 && <Pan state={state218} setState={setState218} />}
+                    {state219 && <Pan state={state219} setState={setState219} />}
+                    {state220 && <Pan state={state220} setState={setState220} />}
+                    {state221 && <Pan state={state221} setState={setState221} />}
+                    {state222 && <Pan state={state222} setState={setState222} />}
+                    {state223 && <Pan state={state223} setState={setState223} />}
+                    {state224 && <Pan state={state224} setState={setState224} />}
+                    {state225 && <Pan state={state225} setState={setState225} />}
+                    {state226 && <Pan state={state226} setState={setState226} />}
+                    {state227 && <Pan state={state227} setState={setState227} />}
+                    {state228 && <Pan state={state228} setState={setState228} />}
+                    {state229 && <Pan state={state229} setState={setState229} />}
+                    {state230 && <Pan state={state230} setState={setState230} />}
+                    {state231 && <Pan state={state231} setState={setState231} />}
+                    {state232 && <Pan state={state232} setState={setState232} />}
+                    {state233 && <Pan state={state233} setState={setState233} />}
+                    {state234 && <Pan state={state234} setState={setState234} />}
+                    {state235 && <Pan state={state235} setState={setState235} />}
+                    {state236 && <Pan state={state236} setState={setState236} />}
+                    {state237 && <Pan state={state237} setState={setState237} />}
+                    {state238 && <Pan state={state238} setState={setState238} />}
+                    {state239 && <Pan state={state239} setState={setState239} />}
+                    {state240 && <Pan state={state240} setState={setState240} />}
+                    {state241 && <Pan state={state241} setState={setState241} />}
+                    {state242 && <Pan state={state242} setState={setState242} />}
+                    {state243 && <Pan state={state243} setState={setState243} />}
+                    {state244 && <Pan state={state244} setState={setState244} />}
+                    {state245 && <Pan state={state245} setState={setState245} />}
+                    {state246 && <Pan state={state246} setState={setState246} />}
+                    {state247 && <Pan state={state247} setState={setState247} />}
+                    {state248 && <Pan state={state248} setState={setState248} />}
+                    {state249 && <Pan state={state249} setState={setState249} />}
+                    {state250 && <Pan state={state250} setState={setState250} />}
+                    {state251 && <Pan state={state251} setState={setState251} />}
+                    {state252 && <Pan state={state252} setState={setState252} />}
+                    {state253 && <Pan state={state253} setState={setState253} />}
+                    {state254 && <Pan state={state254} setState={setState254} />}
+                    {state255 && <Pan state={state255} setState={setState255} />}
+                    {state256 && <Pan state={state256} setState={setState256} />}
+                    {state257 && <Pan state={state257} setState={setState257} />}
+                    {state258 && <Pan state={state258} setState={setState258} />}
+                    {state259 && <Pan state={state259} setState={setState259} />}
+                    {state260 && <Pan state={state260} setState={setState260} />}
+                    {state261 && <Pan state={state261} setState={setState261} />}
+                    {state262 && <Pan state={state262} setState={setState262} />}
+                    {state263 && <Pan state={state263} setState={setState263} />}
+                    {state264 && <Pan state={state264} setState={setState264} />}
+                    {state265 && <Pan state={state265} setState={setState265} />}
+                    {state266 && <Pan state={state266} setState={setState266} />}
+                    {state267 && <Pan state={state267} setState={setState267} />}
+                    {state268 && <Pan state={state268} setState={setState268} />}
+                    {state269 && <Pan state={state269} setState={setState269} />}
+                    {state270 && <Pan state={state270} setState={setState270} />}
+                    {state271 && <Pan state={state271} setState={setState271} />}
+                    {state272 && <Pan state={state272} setState={setState272} />}
+                    {state273 && <Pan state={state273} setState={setState273} />}
+                    {state274 && <Pan state={state274} setState={setState274} />}
+                    {state275 && <Pan state={state275} setState={setState275} />}
+                    {state276 && <Pan state={state276} setState={setState276} />}
+                    {state277 && <Pan state={state277} setState={setState277} />}
+                    {state278 && <Pan state={state278} setState={setState278} />}
+                    {state279 && <Pan state={state279} setState={setState279} />}
+                    {state280 && <Pan state={state280} setState={setState280} />}
+                    {state281 && <Pan state={state281} setState={setState281} />}
+                    {state282 && <Pan state={state282} setState={setState282} />}
+                    {state283 && <Pan state={state283} setState={setState283} />}
+                    {state284 && <Pan state={state284} setState={setState284} />}
+                    {state285 && <Pan state={state285} setState={setState285} />}
+                    {state286 && <Pan state={state286} setState={setState286} />}
+                    {state287 && <Pan state={state287} setState={setState287} />}
+                    {state288 && <Pan state={state288} setState={setState288} />}
+                    {state289 && <Pan state={state289} setState={setState289} />}
+                    {state290 && <Pan state={state290} setState={setState290} />}
+                    {state291 && <Pan state={state291} setState={setState291} />}
+                    {state292 && <Pan state={state292} setState={setState292} />}
+                    {state293 && <Pan state={state293} setState={setState293} />}
+                    {state294 && <Pan state={state294} setState={setState294} />}
+                    {state295 && <Pan state={state295} setState={setState295} />}
+                    {state296 && <Pan state={state296} setState={setState296} />}
+                    {state297 && <Pan state={state297} setState={setState297} />}
+                    {state298 && <Pan state={state298} setState={setState298} />}
+                    {state299 && <Pan state={state299} setState={setState299} />}
+                    {state300 && <Pan state={state300} setState={setState300} />}
+                    {state301 && <Pan state={state301} setState={setState301} />}
+                    {state302 && <Pan state={state302} setState={setState302} />}
+                    {state303 && <Pan state={state303} setState={setState303} />}
+                    {state304 && <Pan state={state304} setState={setState304} />}
+                    {state305 && <Pan state={state305} setState={setState305} />}
+                    {state306 && <Pan state={state306} setState={setState306} />}
+                    {state307 && <Pan state={state307} setState={setState307} />}
+                    {state308 && <Pan state={state308} setState={setState308} />}
+                    {state309 && <Pan state={state309} setState={setState309} />}
+                    {state310 && <Pan state={state310} setState={setState310} />}
+                    {state311 && <Pan state={state311} setState={setState311} />}
+                    {state312 && <Pan state={state312} setState={setState312} />}
+                    {state313 && <Pan state={state313} setState={setState313} />}
+                    {state314 && <Pan state={state314} setState={setState314} />}
+                    {state315 && <Pan state={state315} setState={setState315} />}
+                    {state316 && <Pan state={state316} setState={setState316} />}
+                    {state317 && <Pan state={state317} setState={setState317} />}
+                    {state318 && <Pan state={state318} setState={setState318} />}
+                    {state319 && <Pan state={state319} setState={setState319} />}
+                    {state320 && <Pan state={state320} setState={setState320} />}
+                    {state321 && <Pan state={state321} setState={setState321} />}
+                    {state322 && <Pan state={state322} setState={setState322} />}
+                    {state323 && <Pan state={state323} setState={setState323} />}
+                    {state324 && <Pan state={state324} setState={setState324} />}
+                    {state325 && <Pan state={state325} setState={setState325} />}
+                    {state326 && <Pan state={state326} setState={setState326} />}
+                    {state327 && <Pan state={state327} setState={setState327} />}
+                    {state328 && <Pan state={state328} setState={setState328} />}
+                    {state329 && <Pan state={state329} setState={setState329} />}
+                    {state330 && <Pan state={state330} setState={setState330} />}
+                    {state331 && <Pan state={state331} setState={setState331} />}
+                    {state332 && <Pan state={state332} setState={setState332} />}
+                    {state333 && <Pan state={state333} setState={setState333} />}
+                    {state334 && <Pan state={state334} setState={setState334} />}
+                    {state335 && <Pan state={state335} setState={setState335} />}
+                    {state336 && <Pan state={state336} setState={setState336} />}
+                    {state337 && <Pan state={state337} setState={setState337} />}
+                    {state338 && <Pan state={state338} setState={setState338} />}
+                    {state339 && <Pan state={state339} setState={setState339} />}
+                    {state340 && <Pan state={state340} setState={setState340} />}
+                    {state341 && <Pan state={state341} setState={setState341} />}
+                    {state342 && <Pan state={state342} setState={setState342} />}
+                    {state343 && <Pan state={state343} setState={setState343} />}
+                    {state344 && <Pan state={state344} setState={setState344} />}
+                    {state345 && <Pan state={state345} setState={setState345} />}
+                    {state346 && <Pan state={state346} setState={setState346} />}
+                    {state347 && <Pan state={state347} setState={setState347} />}
+                    {state348 && <Pan state={state348} setState={setState348} />}
+                    {state349 && <Pan state={state349} setState={setState349} />}
+                    {state350 && <Pan state={state350} setState={setState350} />}
+                    {state351 && <Pan state={state351} setState={setState351} />}
+                    {state352 && <Pan state={state352} setState={setState352} />}
+                    {state353 && <Pan state={state353} setState={setState353} />}
+                    {state354 && <Pan state={state354} setState={setState354} />}
+                    {state355 && <Pan state={state355} setState={setState355} />}
+                    {state356 && <Pan state={state356} setState={setState356} />}
+                    {state357 && <Pan state={state357} setState={setState357} />}
+                    {state358 && <Pan state={state358} setState={setState358} />}
+                    {state359 && <Pan state={state359} setState={setState359} />}
+                    {state360 && <Pan state={state360} setState={setState360} />}
+                    {state361 && <Pan state={state361} setState={setState361} />}
+                    {state362 && <Pan state={state362} setState={setState362} />}
+                    {state363 && <Pan state={state363} setState={setState363} />}
+                    {state364 && <Pan state={state364} setState={setState364} />}
+                    {state365 && <Pan state={state365} setState={setState365} />}
+                    {state366 && <Pan state={state366} setState={setState366} />}
+                    {state367 && <Pan state={state367} setState={setState367} />}
+                    {state368 && <Pan state={state368} setState={setState368} />}
+                    {state369 && <Pan state={state369} setState={setState369} />}
+                    {state370 && <Pan state={state370} setState={setState370} />}
+                    {state371 && <Pan state={state371} setState={setState371} />}
+                    {state372 && <Pan state={state372} setState={setState372} />}
+                    {state373 && <Pan state={state373} setState={setState373} />}
+                    {state374 && <Pan state={state374} setState={setState374} />}
+                    {state375 && <Pan state={state375} setState={setState375} />}
+                    {state376 && <Pan state={state376} setState={setState376} />}
+                    {state377 && <Pan state={state377} setState={setState377} />}
+                    {state378 && <Pan state={state378} setState={setState378} />}
+                    {state379 && <Pan state={state379} setState={setState379} />}
+                    {state380 && <Pan state={state380} setState={setState380} />}
+                    {state381 && <Pan state={state381} setState={setState381} />}
+                    {state382 && <Pan state={state382} setState={setState382} />}
+                    {state383 && <Pan state={state383} setState={setState383} />}
+                    {state384 && <Pan state={state384} setState={setState384} />}
+                    {state385 && <Pan state={state385} setState={setState385} />}
+                    {state386 && <Pan state={state386} setState={setState386} />}
+                    {state387 && <Pan state={state387} setState={setState387} />}
+                    {state388 && <Pan state={state388} setState={setState388} />}
+                    {state389 && <Pan state={state389} setState={setState389} />}
+                    {state390 && <Pan state={state390} setState={setState390} />}
+                    {state391 && <Pan state={state391} setState={setState391} />}
+                    {state392 && <Pan state={state392} setState={setState392} />}
+                    {state393 && <Pan state={state393} setState={setState393} />}
+                    {state394 && <Pan state={state394} setState={setState394} />}
+                    {state395 && <Pan state={state395} setState={setState395} />}
+                    {state396 && <Pan state={state396} setState={setState396} />}
+                    {state397 && <Pan state={state397} setState={setState397} />}
+                    {state398 && <Pan state={state398} setState={setState398} />}
+                    {state399 && <Pan state={state399} setState={setState399} />}
+                    {state400 && <Pan state={state400} setState={setState400} />}
+
+
+
+                    <View style={styles.banner}>
+                        <BannerAd ref={twoBannerRef} unitId={adTwoUnitId} size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER} />
+                    </View>
+
+
+
+
+                    {/* Hand */}
+                    {
+                        gamePerson == "2" &&
+                        <LinearGradient
+                            colors={["#fff", "#fff", "red", "#fff", "#fff"]}
+                            style={styles.handBox}
+                            onLayout={(event) => screenLayout(event)}
+                        >
+                            <PanGestureHandler
+                                onGestureEvent={(event) => twoHandGestureEvent(event)}
+                            >
+                                <Pressable
+                                    style={[{
+                                        transform: twoHandTranslateX && handHeight && [
+                                            { translateX: twoHandTranslateX },
+                                        ],
+                                        zIndex: 99,
+                                        position: 'absolute',
+                                        backgroundColor: 'red'
+                                    },
+                                    styles.hand]}
+                                />
+                            </PanGestureHandler>
+                        </LinearGradient>
+                    }
+
+
+                    {/* İKİNCİ KİŞİ */}
+                    <View style={styles.topBox}>
+                        {
+                            gamePerson == "2" &&
+                            <>
+                                <FlatList
+                                    data={gamePuzzlePieces.twoPersonPuzzlePieces}
+                                    ref={twoFlatListRef}
+                                    onContentSizeChange={(w: number) => setTwoFlatlistWidth(w)}
+                                    renderItem={({ item, index }) => (
+                                        <View
+                                            style={styles.topPuzzleWrapper}
+                                            key={index}
+                                        >
+                                            {
+                                                item &&
+                                                <PanGestureHandler
+                                                    onHandlerStateChange={(event) => onHandlerStateChange(event, item)}
+                                                >
+                                                    < Image
+                                                        style={styles.image}
+                                                        source={{ uri: item.uri }}
+                                                        resizeMode='contain'
+                                                    />
+                                                </PanGestureHandler>
+                                            }
+                                        </View>
+                                    )}
+                                    horizontal
+                                    showsHorizontalScrollIndicator={false}
+                                    contentContainerStyle={styles.pieceListContainer}
+                                />
+                            </>
+                        }
+                    </View>
+
+
+
+
+                    {/* OYUN ALANI */}
+                    <View style={styles.mainBox} >
+                        {
+                            toggle &&
+                            <AntDesign
+                                style={styles.toggleBox}
+                                name="closecircle" size={20} color="black"
+                                onPress={closeGame}
+                            />
+                        }
+                        <Entypo
+                            style={styles.infoBox}
+                            onPress={() => setToggleVisibilty()}
+                            name="dots-two-horizontal"
+                            size={24}
+                            color="black"
                         />
-                    </PanGestureHandler>
-                </LinearGradient>
-            }
+                    </View>
+                    <View
+                        onLayout={(event) => handleLayout(event)}
+                        style={styles.arena}
+                    >
+                        {
+                            loadingGame &&
+                            <ActivityIndicator color="red" size={30} />
+                        }
+                    </View>
 
 
-            {/* İKİNCİ KİŞİ */}
-            <View style={styles.topBox}>
-                {
-                    gamePerson == "2" &&
-                    <>
+
+
+                    {/* BİRİNCİ KİŞİ  */}
+                    <View style={styles.bottomBox}>
                         <FlatList
-                            data={gamePuzzlePieces.twoPersonPuzzlePieces}
-                            ref={twoFlatListRef}
-                            onContentSizeChange={(w: number) => setTwoFlatlistWidth(w)}
+                            data={gamePuzzlePieces.onePersonPuzzlePieces}
+                            ref={oneFlatListRef}
+                            onContentSizeChange={(w: number) => setOneFlatlistWidth(w)}
                             renderItem={({ item, index }) => (
                                 <View
-                                    style={styles.topPuzzleWrapper}
+                                    style={styles.bottomPuzzleWrapper}
                                     key={index}
                                 >
                                     {
@@ -1492,112 +1583,59 @@ const GameScreen = () => {
                             showsHorizontalScrollIndicator={false}
                             contentContainerStyle={styles.pieceListContainer}
                         />
-                    </>
-                }
-            </View>
+                    </View>
 
 
-
-
-            {/* OYUN ALANI */}
-            <View style={styles.mainBox} >
-                {
-                    toggle &&
-                    <AntDesign
-                        style={styles.toggleBox}
-                        name="closecircle" size={20} color="#fff"
-                        onPress={closeGame}
-                    />
-                }
-                <Pressable
-                    style={({ pressed }) => [
-                        {
-                            backgroundColor: pressed ? '#4361ee' : '#fff'
-                        },
-                        styles.infoBox
-                    ]}
-                    onPress={() => setToggleVisibilty()}
-                />
-            </View>
-            <View
-                onLayout={(event) => handleLayout(event)}
-                style={styles.arena}
-            >
-                {
-                    loadingGame &&
-                    <ActivityIndicator color="red" size={30} />
-                }
-                {
-                    puzzleİsComplete &&
-                    <Text style={{ fontSize: 30, fontWeight: '600', color: '#fff' }}>Tebrikler !!</Text>
-                }
-
-            </View>
-
-
-
-
-            {/* BİRİNCİ KİŞİ  */}
-            <View style={styles.bottomBox}>
-                <FlatList
-                    data={gamePuzzlePieces.onePersonPuzzlePieces}
-                    ref={oneFlatListRef}
-                    onContentSizeChange={(w: number) => setOneFlatlistWidth(w)}
-                    renderItem={({ item, index }) => (
-                        <View
-                            style={styles.bottomPuzzleWrapper}
-                            key={index}
+                    {/* Hand */}
+                    <LinearGradient
+                        colors={["#fff", "#fff", "#00a6fb", "#fff", "#fff"]}
+                        style={styles.handBox}
+                        onLayout={(event) => screenLayout(event)}
+                    >
+                        <PanGestureHandler
+                            onGestureEvent={(event) => oneHandGestureEvent(event)}
                         >
-                            {
-                                item &&
-                                <PanGestureHandler
-                                    onHandlerStateChange={(event) => onHandlerStateChange(event, item)}
-                                >
-                                    < Image
-                                        style={styles.image}
-                                        source={{ uri: item.uri }}
-                                        resizeMode='contain'
-                                    />
-                                </PanGestureHandler>
-                            }
-                        </View>
-                    )}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={styles.pieceListContainer}
-                />
-            </View>
+                            <Pressable
+                                onLayout={(event) => handSize(event)}
+                                style={[{
+                                    transform: oneHandTranslateX && [
+                                        { translateX: oneHandTranslateX },
+                                    ],
+                                    zIndex: 99,
+                                    position: 'absolute',
+                                    backgroundColor: '#00a6fb'
+                                },
+                                styles.hand]}
+                            />
+                        </PanGestureHandler>
+                    </LinearGradient>
 
+                    <View style={styles.banner}>
+                        <BannerAd ref={oneBannerRef} unitId={adOneUnitId} size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER} />
+                    </View>
+                </GestureHandlerRootView >
+            }
 
-            {/* Hand */}
-            <LinearGradient
-                colors={["#fff", "#fff", "#00a6fb", "#fff", "#fff"]}
-                style={styles.handBox}
-                onLayout={(event) => screenLayout(event)}
-            >
-                <PanGestureHandler
-                    onGestureEvent={(event) => oneHandGestureEvent(event)}
+            {
+                puzzleİsComplete &&
+                <ReactNativeModal
+                    isVisible={true}
+                    style={styles.modalContainer}
+                    hasBackdrop={false}
                 >
-                    <Pressable
-                        onLayout={(event) => handSize(event)}
-                        style={[{
-                            transform: oneHandTranslateX && [
-                                { translateX: oneHandTranslateX },
-                            ],
-                            zIndex: 99,
-                            position: 'absolute',
-                            backgroundColor: '#00a6fb'
-                        },
-                        styles.hand]}
-                    />
-                </PanGestureHandler>
-            </LinearGradient>
+                    {
+                        image &&
+                        <Image style={styles.finishImage} source={{ uri: image }} />
+                    }
+                    <Text style={{ fontSize: 25, fontWeight: '700', color: '#fff' }}>Tebrikler ...</Text>
+                    <Pressable style={styles.finishBtn} onPress={() => setFinish()}>
+                        <Text style={styles.finishText}>Ana ekran</Text>
+                        <FontAwesome6 name="chevron-right" size={22} color="#fff" />
+                    </Pressable>
+                </ReactNativeModal>
+            }
+        </>
 
-            <View style={styles.banner}>
-                <BannerAd ref={bannerRef} unitId={adUnitId} size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER} />
-            </View>
-
-        </GestureHandlerRootView >
     )
 }
 

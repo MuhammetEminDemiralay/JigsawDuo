@@ -3,13 +3,15 @@ import { FlatList, Image, Pressable, Text, View } from 'react-native'
 import { styles } from './styles'
 import { category } from '../../../data/category'
 import { useNavigation } from '@react-navigation/native'
-import { LinearGradient } from 'expo-linear-gradient'
 import { FontAwesome } from '@expo/vector-icons';
+import { logout } from '../../../redux/authSlice'
+import { useDispatch } from 'react-redux'
 
 
 const CategoryListScreen = () => {
 
   const navigation: any = useNavigation();
+  const dispatch: any = useDispatch();
 
   return (
     <View
@@ -26,6 +28,14 @@ const CategoryListScreen = () => {
               <Text style={styles.titleText}>Kategoriler</Text>
             </View>
           </View>
+        )}
+
+        ListFooterComponent={() => (
+          <>
+            <Pressable onPress={() => dispatch(logout())} style={styles.btnBox}>
+              <Text style={styles.btnText}>Çıkış yap</Text>
+            </Pressable>
+          </>
         )}
         renderItem={({ item, index }) => (
           <>
@@ -62,6 +72,7 @@ const CategoryListScreen = () => {
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
       />
+
     </View>
   )
 }

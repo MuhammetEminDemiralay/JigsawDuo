@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { category } from '../../../data/category';
+import { logout } from '../../../redux/authSlice';
 
 
 const MainScreen = () => {
@@ -24,6 +25,9 @@ const MainScreen = () => {
 
       ListHeaderComponent={() => (
         <>
+          <Pressable onPress={() => dispatch(logout())} style={styles.btnBox}>
+            <Text style={styles.btnText}>Çıkış yap</Text>
+          </Pressable>
           <View style={[{ marginTop: 50, height: 120 }, styles.header]}>
             <Text style={styles.text}>Kategori</Text>
           </View>
